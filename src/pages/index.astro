@@ -4,10 +4,8 @@ import Base from '../layouts/Base.astro';
 const hosts = [
   { name: 'GitHub Pages', target: 'username.github.io', note: 'Free forever, works with a repo' },
   { name: 'Cloudflare Pages', target: 'project.pages.dev', note: 'Free, fast, custom domains' },
-  { name: 'Netlify', target: 'site.netlify.app', note: 'Free tier, drag-and-drop deploy' },
   { name: 'Vercel', target: 'project.vercel.app', note: 'Great for Next.js portfolios' },
-  { name: 'Firebase Hosting', target: 'project.web.app', note: 'Free Spark plan' },
-  { name: 'Carrd', target: 'yourname.carrd.co', note: 'Simple one-page sites' },
+  { name: 'Netlify', target: 'site.netlify.app', note: 'Free tier, drag-and-drop deploy' },
 ];
 ---
 
@@ -46,6 +44,11 @@ const hosts = [
     usually within 15 minutes. Email <code>verify@filipino-talent.com</code> from
     the address on your portfolio to confirm it is yours. If we do not hear from
     you within a day, we remove it.
+  </li>
+  <li>
+    <strong>Connect it at your host.</strong> Tell GitHub Pages, Cloudflare
+    Pages, Vercel, or Netlify to answer for the subdomain. Our
+    <a href="/guide/connect">one-page guide</a> walks you through it.
   </li>
   <li>
     <strong>We check it.</strong> A maintainer reviews new subdomains and removes

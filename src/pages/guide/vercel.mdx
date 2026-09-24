@@ -19,14 +19,16 @@ On the [submit form](/submit):
 - **Record type:** `CNAME`
 - **Target:** `your-project.vercel.app`
 
-## 3. After it is live
+## 3. Connect it at Vercel
 
-1. Open the project → **Settings → Domains**.
-2. Enter `yourname.filipino-talent.com` and add it.
-3. Vercel verifies the DNS record we published and issues HTTPS.
+Once your subdomain is live, tell Vercel to answer for it. That is the step that
+actually makes the site load — follow the
+[Vercel steps](/guide/connect#vercel).
 
 ## Notes
 
 - On the free plan a custom domain attached to a project works through a plain
   CNAME.
 - Use the `vercel.app` production domain as the target.
+- Vercel may ask for a different, project-specific CNAME target. If so, email
+  `verify@filipino-talent.com` and we will update your record.

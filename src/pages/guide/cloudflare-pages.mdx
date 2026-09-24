@@ -22,15 +22,14 @@ On the [submit form](/submit):
 - **Record type:** `CNAME`
 - **Target:** `your-project.pages.dev`
 
-## 3. After it is live
+## 3. Connect it at Cloudflare Pages
 
-1. Open your Pages project → **Custom domains → Set up a custom domain**.
-2. Enter `yourname.filipino-talent.com`.
-3. Because we already published the DNS record, Cloudflare verifies it
-   automatically and issues HTTPS.
+Once your subdomain is live, tell Cloudflare Pages to answer for it. That is the
+step that actually makes the site load — follow the
+[Cloudflare Pages steps](/guide/connect#cloudflare-pages).
 
 ## Notes
 
-- If Cloudflare Pages asks you to "add a CNAME record", it is already done by us.
-  Wait a few minutes and retry the verification.
 - The target is the project's `pages.dev` address, not a deployment hash URL.
+- Opening the subdomain before connecting it shows **522 Connection timed out**.
+  That is expected until you finish step 3.

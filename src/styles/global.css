@@ -282,6 +282,28 @@ label {
   margin-top: 4px;
 }
 
+details.advanced {
+  margin-top: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 2px 12px 12px;
+}
+
+details.advanced > summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 10px 0;
+}
+
+details.advanced label {
+  margin-top: 8px;
+}
+
+#target-warning {
+  color: var(--warn);
+}
+
 input:not([type='checkbox']):not([type='radio']),
 select,
 textarea {

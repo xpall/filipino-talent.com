@@ -20,12 +20,14 @@ On the [submit form](/submit):
 - **Record type:** `CNAME`
 - **Target:** `your-site.netlify.app`
 
-## 3. After it is live
+## 3. Connect it at Netlify
 
-1. Go to **Domain management → Add a domain**.
-2. Enter `yourname.filipino-talent.com` and add it.
-3. Netlify checks the DNS record we published and enables HTTPS.
+Once your subdomain is live, tell Netlify to answer for it. That is the step
+that actually makes the site load — follow the
+[Netlify steps](/guide/connect#netlify).
 
 ## Notes
 
 - Use the `netlify.app` address, not a deploy-preview URL.
+- Keep DNS outside Netlify. Do not switch to Netlify DNS; it needs nameservers
+  we cannot change.

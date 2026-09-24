@@ -1,0 +1,185 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const hosts = [
+  { anchor: 'github-pages', name: 'GitHub Pages', target: 'username.github.io' },
+  { anchor: 'cloudflare-pages', name: 'Cloudflare Pages', target: 'project.pages.dev' },
+  { anchor: 'vercel', name: 'Vercel', target: 'project.vercel.app' },
+  { anchor: 'netlify', name: 'Netlify', target: 'site.netlify.app' },
+];
+---
+
+<Base
+  title="Connect your subdomain · filipino-talent.com"
+  description="The last step: tell GitHub Pages, Cloudflare Pages, Vercel, or Netlify to answer for your new filipino-talent.com subdomain."
+>
+<section>
+  <span class="tag">Final step</span>
+  <h1>Connect your subdomain</h1>
+  <p class="lead">
+    Your subdomain is published, but that is only half the job. DNS tells the
+    internet where to look; your host also has to agree to answer for your new
+    address. Until you do this, opening
+    <code>https://yourname.filipino-talent.com</code> shows an error (Cloudflare
+    Pages shows <strong>522 Connection timed out</strong>; others show a 404 or a
+    host error page).
+  </p>
+  <p class="lead">
+    Pick the host where your portfolio lives and follow the steps. It takes
+    about a minute.
+  </p>
+</section>
+
+<div class="grid" style="margin-top:24px">
+  {hosts.map((h) => (
+    <a class="card" href={`#${h.anchor}`} style="text-decoration:none">
+      <strong style="color:var(--text)">{h.name}</strong>
+      <div class="muted mono" style="font-size:.82rem;margin-top:6px">{h.target}</div>
+      <div style="margin-top:8px;font-size:.9rem">Go to steps →</div>
+    </a>
+  ))}
+</div>
+
+<div class="notice warn" style="margin-top:24px">
+  <strong>Using Wix, Canva, WordPress, or another builder?</strong>
+  This service only connects hosts that let you attach a custom domain for free
+  through a plain CNAME. Wix needs a paid plan and its own DNS records, so it is
+  not supported here. Move your page to <a href="#github-pages">GitHub Pages</a>,
+  <a href="#cloudflare-pages">Cloudflare Pages</a>, <a href="#vercel">Vercel</a>,
+  or <a href="#netlify">Netlify</a> — all free — then come back to this page.
+</div>
+
+<hr />
+
+<section>
+  <h2 id="github-pages" style="margin-top:0">GitHub Pages</h2>
+  <ol class="steps">
+    <li>
+      Open your repository, then go to <strong>Settings → Pages</strong>.
+    </li>
+    <li>
+      Under <strong>Custom domain</strong>, type
+      <code>yourname.filipino-talent.com</code> and click <strong>Save</strong>.
+      GitHub adds a <code>CNAME</code> file to your repository.
+    </li>
+    <li>
+      Wait a few minutes. GitHub runs a DNS check and shows a green checkmark
+      when it finds the record we published.
+    </li>
+    <li>
+      Once it passes, tick <strong>Enforce HTTPS</strong>. The certificate can
+      take up to an hour the first time.
+    </li>
+  </ol>
+  <div class="notice">
+    <strong>Notes:</strong> one custom domain per Pages site. For a project site
+    (<code>username.github.io/reponame</code>), the subdomain still routes to
+    that repository. Do not add the <code>CNAME</code> file before we publish
+    DNS — it is already published by the time you reach this step.
+  </div>
+</section>
+
+<hr />
+
+<section>
+  <h2 id="cloudflare-pages" style="margin-top:0">Cloudflare Pages</h2>
+  <ol class="steps">
+    <li>
+      Open your Pages project in the Cloudflare dashboard.
+    </li>
+    <li>
+      Go to <strong>Custom domains → Set up a custom domain</strong>.
+    </li>
+    <li>
+      Enter <code>yourname.filipino-talent.com</code> and continue.
+    </li>
+    <li>
+      Cloudflare finds the CNAME we already published and verifies it
+      automatically. Click <strong>Activate domain</strong> if it asks.
+    </li>
+    <li>
+      Wait for the certificate (usually a few minutes, up to an hour).
+    </li>
+  </ol>
+  <div class="notice warn">
+    <strong>Seeing 522 Connection timed out?</strong> That means this step is not
+    done yet. Add the subdomain under <strong>Custom domains</strong> and the
+    error clears. If Cloudflare asks you to "add a CNAME record", it is already
+    done by us — just continue.
+  </div>
+</section>
+
+<hr />
+
+<section>
+  <h2 id="vercel" style="margin-top:0">Vercel</h2>
+  <ol class="steps">
+    <li>
+      Open your project, then go to <strong>Settings → Domains</strong>.
+    </li>
+    <li>
+      Click <strong>Add Domain</strong> and enter
+      <code>yourname.filipino-talent.com</code>.
+    </li>
+    <li>
+      Vercel shows the record it expects. If it shows the record as valid, you
+      are done — wait for the certificate.
+    </li>
+    <li>
+      If Vercel says <strong>Invalid Configuration</strong>, it may want a
+      project-specific CNAME (for example
+      <code>xxxx.vercel-dns-017.com</code>). Email
+      <a href="mailto:verify@filipino-talent.com">verify@filipino-talent.com</a>
+      with the value it shows and we will update your record.
+    </li>
+  </ol>
+  <div class="notice">
+    <strong>Notes:</strong> Vercel may also ask you to verify ownership with a
+    TXT record. If so, email us and we will help.
+  </div>
+</section>
+
+<hr />
+
+<section>
+  <h2 id="netlify" style="margin-top:0">Netlify</h2>
+  <ol class="steps">
+    <li>
+      Open your site, then go to <strong>Domain management → Add a domain</strong>.
+    </li>
+    <li>
+      Enter <code>yourname.filipino-talent.com</code>.
+    </li>
+    <li>
+      Choose to keep DNS outside Netlify — the "I already own this domain" path.
+      Do <strong>not</strong> switch to Netlify DNS; that would mean changing
+      nameservers, which this service cannot do.
+    </li>
+    <li>
+      Netlify finds the CNAME we published and verifies it. Wait for the HTTPS
+      certificate.
+    </li>
+  </ol>
+  <div class="notice">
+    <strong>Notes:</strong> if Netlify shows "Awaiting External DNS" for more
+    than 15 minutes, wait a little longer — the record is already live, so this
+    is usually just propagation.
+  </div>
+</section>
+
+<hr />
+
+<section>
+  <h2 style="margin-top:0">Still not working?</h2>
+  <p>
+    Give it 10–15 minutes after DNS is published, then reload in a private
+    window. If it is still broken, see
+    <a href="/guide/troubleshooting">Troubleshooting</a>, or email
+    <a href="mailto:verify@filipino-talent.com">verify@filipino-talent.com</a>
+    with your subdomain and the host you use.
+  </p>
+  <p>
+    <a class="btn secondary" href="/guide">Back to the guide</a>
+  </p>
+</section>
+</Base>

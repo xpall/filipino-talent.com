@@ -49,19 +49,25 @@ import Base from '../layouts/Base.astro';
       <option value="TXT">TXT: text record</option>
     </select>
 
-    <label for="recordValue">Target</label>
-    <input id="recordValue" name="recordValue" list="targets" placeholder="juan-dela-cruz.github.io" required />
-    <datalist id="targets">
-      <option value="username.github.io"></option>
-      <option value="project.pages.dev"></option>
-      <option value="site.netlify.app"></option>
-      <option value="project.vercel.app"></option>
-      <option value="project.web.app"></option>
-      <option value="yourname.carrd.co"></option>
-    </datalist>
-    <p class="hint" id="target-hint">
-      For a CNAME, enter the hostname only, with no <code>https://</code> and no path.
-    </p>
+    <details id="advanced-target" class="advanced">
+      <summary>Advanced: DNS target</summary>
+      <div style="margin-top:10px">
+        <label for="recordValue">Target</label>
+        <input id="recordValue" name="recordValue" list="targets" placeholder="juan-dela-cruz.github.io" autocomplete="off" />
+        <datalist id="targets">
+          <option value="username.github.io"></option>
+          <option value="project.pages.dev"></option>
+          <option value="project.vercel.app"></option>
+          <option value="site.netlify.app"></option>
+        </datalist>
+        <p class="hint" id="target-hint">
+          We fill this in from your portfolio URL. Only change it if your host gave
+          you a specific target. Enter the hostname only, with no <code>https://</code>
+          and no path.
+        </p>
+        <p class="hint" id="target-warning" hidden></p>
+      </div>
+    </details>
 
     <label class="checkline">
       <input id="agreeToTerms" name="agreeToTerms" type="checkbox" required />
@@ -87,11 +93,77 @@ import Base from '../layouts/Base.astro';
 <div id="result" hidden></div>
 
 <script>
+  import { hostnameFromUrl, isAllowedCnameTarget } from '../lib/targets';
+  import { CONNECT_GUIDE_PATH, connectGuideForTarget } from '../lib/hostGuides';
+
   const form = document.getElementById('request-form') as HTMLFormElement;
   const btn = document.getElementById('submit-btn') as HTMLButtonElement;
   const result = document.getElementById('result') as HTMLDivElement;
   const formWrap = document.getElementById('form-wrap') as HTMLDivElement;
+  const portfolioInput = document.getElementById('portfolioUrl') as HTMLInputElement;
+  const recordTypeSelect = document.getElementById('recordType') as HTMLSelectElement;
+  const advanced = document.getElementById('advanced-target') as HTMLDetailsElement;
+  const targetInput = document.getElementById('recordValue') as HTMLInputElement;
+  const targetHint = document.getElementById('target-hint') as HTMLParagraphElement;
+  const targetWarning = document.getElementById('target-warning') as HTMLParagraphElement;
   const API = (import.meta.env.PUBLIC_API_BASE ?? 'https://api.filipino-talent.com').replace(/\/$/, '');
+
+  const CNAME_HINT =
+    'We fill this in from your portfolio URL. Only change it if your host gave you a specific target. Enter the hostname only, with no <code>https://</code> and no path.';
+  const MANUAL_PLACEHOLDER: Record<string, string> = {
+    A: '203.0.113.10',
+    AAAA: '2001:db8::1',
+    TXT: 'verify=abc123',
+  };
+  let targetEdited = false;
+
+  const recordType = () => recordTypeSelect.value.toUpperCase();
+
+  function updateTargetWarning() {
+    const value = targetInput.value.trim();
+    if (recordType() === 'CNAME' && value && !isAllowedCnameTarget(value)) {
+      targetWarning.innerHTML =
+        'This target is not on our supported hosts list, so the request will be rejected. See <a href="/guide/troubleshooting">Troubleshooting</a>.';
+      targetWarning.hidden = false;
+      advanced.open = true;
+    } else {
+      targetWarning.hidden = true;
+      targetWarning.textContent = '';
+    }
+  }
+
+  function syncTargetFromPortfolio() {
+    if (targetEdited || recordType() !== 'CNAME') return;
+    const host = hostnameFromUrl(portfolioInput.value);
+    targetInput.value = host.includes('.') ? host : '';
+    updateTargetWarning();
+  }
+
+  function applyRecordType() {
+    if (recordType() === 'CNAME') {
+      targetInput.placeholder = 'juan-dela-cruz.github.io';
+      targetHint.innerHTML = CNAME_HINT;
+      syncTargetFromPortfolio();
+    } else {
+      if (!targetEdited) targetInput.value = '';
+      targetInput.placeholder = MANUAL_PLACEHOLDER[recordType()] ?? '';
+      targetHint.textContent = `Enter the ${recordType()} value your host gave you.`;
+      advanced.open = true;
+      targetWarning.hidden = true;
+    }
+  }
+
+  portfolioInput.addEventListener('input', syncTargetFromPortfolio);
+  recordTypeSelect.addEventListener('change', () => {
+    targetEdited = false;
+    applyRecordType();
+  });
+  targetInput.addEventListener('input', () => {
+    targetEdited = true;
+    updateTargetWarning();
+  });
+
+  applyRecordType();
 
   function show(html: string, kind = '') {
     result.className = `notice ${kind}`;
@@ -103,6 +175,26 @@ import Base from '../layouts/Base.astro';
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!form.reportValidity()) return;
+
+    const type = recordType();
+    if (!targetInput.value.trim()) {
+      advanced.open = true;
+      targetInput.focus();
+      show(
+        `<strong>Could not submit.</strong><br>Please enter your ${type === 'CNAME' ? 'target hostname' : `${type} value`}.`,
+        'error',
+      );
+      return;
+    }
+    if (type === 'CNAME' && !isAllowedCnameTarget(targetInput.value)) {
+      advanced.open = true;
+      targetInput.focus();
+      show(
+        '<strong>Could not submit.</strong><br>That target is not on our supported hosts list. See the <a href="/guide/troubleshooting">Troubleshooting</a> guide.',
+        'error',
+      );
+      return;
+    }
 
     const data = Object.fromEntries(new FormData(form).entries());
     const payload = {
@@ -141,12 +233,25 @@ import Base from '../layouts/Base.astro';
       const steps = (body.instructions as string[])
         .map((line: string) => `<li>${line}</li>`)
         .join('');
+      const guide = connectGuideForTarget(targetInput.value);
+      const connect = guide
+        ? `<div class="notice warn" style="margin-top:16px">
+             <strong>Final step:</strong> connect <code>${body.subdomain}</code>
+             in your ${guide.label} dashboard, or the link will show an error.
+             <a href="${CONNECT_GUIDE_PATH}#${guide.anchor}">Open the ${guide.label} steps →</a>
+           </div>`
+        : `<div class="notice warn" style="margin-top:16px">
+             <strong>Final step:</strong> connect <code>${body.subdomain}</code>
+             in your host's dashboard, or the link will show an error.
+             <a href="${CONNECT_GUIDE_PATH}">See how →</a>
+           </div>`;
       show(
         `<h2 style="margin-top:0">Request received</h2>
          <ol>${steps}</ol>
          <p>Your site goes live at <strong>${body.subdomain}</strong>, usually
             within 15 minutes. A maintainer reviews it afterward and may remove
-            it if it breaks the rules.</p>`,
+            it if it breaks the rules.</p>
+         ${connect}`,
         'ok',
       );
     } catch (err) {

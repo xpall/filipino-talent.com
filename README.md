@@ -45,6 +45,7 @@ npm run preview
 | --- | --- |
 | `/` | Landing page |
 | `/guide` | Step-by-step tutorial and host chooser |
+| `/guide/connect` | Final step: connect the subdomain at GitHub Pages, Cloudflare Pages, Vercel, or Netlify |
 | `/guide/*` | Per-host guides (GitHub Pages, Cloudflare Pages, Netlify, Vercel, Canva, troubleshooting) |
 | `/submit` | Request form |
 | `/directory` | Public list of claimed subdomains |

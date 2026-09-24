@@ -19,11 +19,16 @@ that break the rules.
 We review subdomains after they publish and remove ones that break the
 [Terms](/terms), such as impersonation, phishing, or illegal content.
 
-## My subdomain shows "404" or a host error page
+## My subdomain shows 522, "404", or a host error page
 
-You probably have not added the custom domain in your host's dashboard yet. DNS
-alone is not enough. The host also needs to know it should answer for your
-subdomain.
+You have not connected the subdomain at your host yet. DNS alone is not enough —
+the host also needs to know it should answer for your subdomain.
+
+- Cloudflare Pages shows **522 Connection timed out** until you add the domain
+  under **Custom domains**.
+- Other hosts show a 404 or their own error page.
+
+Follow the [Connect your subdomain](/guide/connect) steps:
 
 - GitHub Pages → Settings → Pages → Custom domain
 - Cloudflare Pages → Custom domains

@@ -21,12 +21,17 @@ produce a broken page.
 ### Option A: Rebuild a quick page for free (recommended)
 
 If you already have the design in Canva, you can recreate a simple one-page
-portfolio in about 30 minutes:
+portfolio in about 30 minutes on any of our supported hosts:
 
-- **Carrd:** free plan supports a custom domain. Recreate your sections, then
-  follow the same [submit](/submit) flow with target `yourname.carrd.co`.
-- **GitHub Pages:** free. See the [GitHub Pages guide](/guide/github-pages).
+- **GitHub Pages** — free. See the [GitHub Pages guide](/guide/github-pages).
   You can export your Canva design as images and place them on the page.
+- **Cloudflare Pages** — free. See the
+  [Cloudflare Pages guide](/guide/cloudflare-pages).
+- **Vercel** and **Netlify** — free on their hobby plans. See the
+  [Vercel](/guide/vercel) and [Netlify](/guide/netlify) guides.
+
+Avoid **Carrd** for this: its custom-domain feature needs a paid Pro Standard
+plan, so it cannot be connected for free.
 
 ### Option B: Keep the Canva share link
 
@@ -43,7 +48,10 @@ check whether the required target can be supported.
 ## Other builders
 
 - **Webflow, Notion, Wix, Squarespace, WordPress.com, Medium:** custom domains
-  are paid features and generally need their own verification flow, so they are
-  not on our allow-list.
+  are paid features and generally need their own DNS records or verification
+  flow, so they are not supported. Wix in particular requires a Premium plan and
+  its own `wixdns.net` records.
+- If you use one of these, move your page to GitHub Pages, Cloudflare Pages,
+  Vercel, or Netlify — all free — before you [submit](/submit).
 - If your host gives you a target like `something.example.com` and you are not
   sure it works, email us and we will take a look.

@@ -15,9 +15,10 @@ what DNS means. You only need a site that is already online.
 - [ ] You know the **email address** shown on that portfolio.
 - [ ] You have an idea of the **subdomain** you want, usually your name.
 
-> **Heads up about Canva:** free Canva websites cannot use a custom domain, so
-> they cannot be connected here. See [Using Canva](/guide/canva) for free
-> workarounds.
+> **Which hosts work?** GitHub Pages, Cloudflare Pages, Vercel, and Netlify —
+> all free with a plain CNAME. Builders like Wix, Canva, and WordPress.com need
+> a paid plan and their own DNS records, so they are not supported here. See
+> [Using Canva](/guide/canva) for free alternatives.
 
 ## 1. Pick the host you already use
 
@@ -32,9 +33,12 @@ its guide:
 | Vercel | Yes | [Vercel](/guide/vercel) |
 | Canva | No (custom domain) | [Canva workarounds](/guide/canva) |
 
-## 2. Find your host's target
+## 2. Your host's target
 
-Each host has a default address you point your subdomain at. Examples:
+Your subdomain points at your host's address. Most of the time this is simply
+the address you already gave as your portfolio URL, with the `https://` and
+anything after the first `/` removed. The form fills it in for you, so you can
+skip this step unless your host gives you a different target.
 
 | Host | What you enter as the target |
 | --- | --- |
@@ -43,8 +47,8 @@ Each host has a default address you point your subdomain at. Examples:
 | Netlify | `your-site.netlify.app` |
 | Vercel | `your-project.vercel.app` |
 
-Enter this in the **Target** field of the form as a
-[CNAME](/guide#what-is-a-cname).
+If you do need to change it, open **Advanced: DNS target** in the form and enter
+it as a [CNAME](/guide#what-is-a-cname), with no `https://` and no path.
 
 ## 3. Submit the form
 
@@ -56,7 +60,8 @@ Go to [Get a subdomain](/submit) and fill in:
 - your portfolio URL,
 - your GitHub username (optional),
 - the record type (**CNAME** for most people),
-- the target from step 2.
+- the target (filled in automatically; only change it under **Advanced** if your
+  host told you a specific target).
 
 ## 4. It goes live
 
@@ -71,14 +76,14 @@ There is no code to include. If we do not hear from you within a day, we remove
 the subdomain. A maintainer also reviews published subdomains and may remove any
 that break the rules.
 
-## 5. After it goes live
+## 5. Connect it at your host
 
-Once it is live, you can point your site at it:
+DNS alone is not enough — your host also has to agree to answer for the
+subdomain.
 
-1. Add your subdomain as a **custom domain** in your host's dashboard
-   (GitHub Pages, Cloudflare Pages, and so on). Each host guide explains how.
-2. Wait a few minutes for DNS and HTTPS. HTTPS can take up to an hour the first
-   time.
+1. Go to [Connect your subdomain](/guide/connect) and follow the steps for
+   GitHub Pages, Cloudflare Pages, Vercel, or Netlify.
+2. Wait a few minutes for HTTPS. The first certificate can take up to an hour.
 3. Open `https://yourname.filipino-talent.com` and confirm it loads.
 
 If something does not work, see [Troubleshooting](/guide/troubleshooting).
