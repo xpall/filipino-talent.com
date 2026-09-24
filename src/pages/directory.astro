@@ -6,7 +6,15 @@ import Base from '../layouts/Base.astro';
 <section>
   <h1>Subdomain directory</h1>
   <p class="lead">Sites using a filipino-talent.com subdomain.</p>
-  <input id="search" placeholder="Search by subdomain or GitHub…" style="max-width:420px;margin-top:8px" />
+  <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:8px">
+    <input id="search" placeholder="Search by subdomain or GitHub…" style="max-width:420px" />
+    <select id="sort" style="width:auto" aria-label="Sort subdomains">
+      <option value="az" selected>Name A–Z</option>
+      <option value="za">Name Z–A</option>
+      <option value="new">Newest added</option>
+      <option value="old">Oldest added</option>
+    </select>
+  </div>
 </section>
 
 <div id="list" class="grid" style="margin-top:24px">
@@ -16,12 +24,14 @@ import Base from '../layouts/Base.astro';
 <script>
   const list = document.getElementById('list') as HTMLDivElement;
   const search = document.getElementById('search') as HTMLInputElement;
+  const sort = document.getElementById('sort') as HTMLSelectElement;
   const API = (import.meta.env.PUBLIC_API_BASE ?? 'https://api.filipino-talent.com').replace(/\/$/, '');
 
   interface Domain {
     subdomain: string;
     portfolio_url: string | null;
     github_username: string | null;
+    created_at: string;
   }
 
   let domains: Domain[] = [];
@@ -40,32 +50,50 @@ import Base from '../layouts/Base.astro';
     list.innerHTML = items
       .map((d) => {
         const href = d.portfolio_url ?? `https://${d.subdomain}.filipino-talent.com`;
+        const added = d.created_at ? d.created_at.slice(0, 10) : '';
         return `
         <a class="card" href="${esc(href)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
-          <strong style="color:var(--text)">${esc(d.subdomain)}</strong>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">
+            <strong style="color:var(--text)">${esc(d.subdomain)}</strong>
+            ${added ? `<span class="muted mono" style="font-size:.78rem;flex:none">${esc(added)}</span>` : ''}
+          </div>
           ${d.github_username ? `<p class="muted" style="margin:8px 0 0;font-size:.9rem">@${esc(d.github_username)}</p>` : ''}
         </a>`;
       })
       .join('');
   }
 
-  search.addEventListener('input', () => {
+  function sortDomains(items: Domain[]): Domain[] {
+    const sorted = [...items];
+    const byName = (a: Domain, b: Domain) => a.subdomain.localeCompare(b.subdomain);
+    const byDate = (a: Domain, b: Domain) => (Date.parse(a.created_at) || 0) - (Date.parse(b.created_at) || 0);
+    const mode = sort.value;
+    if (mode === 'az') sorted.sort(byName);
+    else if (mode === 'za') sorted.sort((a, b) => byName(b, a));
+    else if (mode === 'new') sorted.sort((a, b) => byDate(b, a));
+    else if (mode === 'old') sorted.sort(byDate);
+    return sorted;
+  }
+
+  function update() {
     const q = search.value.trim().toLowerCase();
-    render(
-      domains.filter(
-        (d) =>
-          !q ||
-          d.subdomain.toLowerCase().includes(q) ||
-          (d.github_username ?? '').toLowerCase().includes(q),
-      ),
+    const filtered = domains.filter(
+      (d) =>
+        !q ||
+        d.subdomain.toLowerCase().includes(q) ||
+        (d.github_username ?? '').toLowerCase().includes(q),
     );
-  });
+    render(sortDomains(filtered));
+  }
+
+  search.addEventListener('input', update);
+  sort.addEventListener('change', update);
 
   fetch(`${API}/domains`)
     .then((r) => r.json())
     .then((data) => {
       domains = data.domains ?? [];
-      render(domains);
+      update();
     })
     .catch(() => {
       list.innerHTML = '<p class="muted">Could not load the directory right now.</p>';
