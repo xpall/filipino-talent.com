@@ -6,7 +6,7 @@ import Base from '../layouts/Base.astro';
 <section>
   <h1>Subdomain directory</h1>
   <p class="lead">Sites using a filipino-talent.com subdomain.</p>
-  <input id="search" placeholder="Search by name, GitHub, or host…" style="max-width:420px;margin-top:8px" />
+  <input id="search" placeholder="Search by subdomain or GitHub…" style="max-width:420px;margin-top:8px" />
 </section>
 
 <div id="list" class="grid" style="margin-top:24px">
@@ -38,13 +38,14 @@ import Base from '../layouts/Base.astro';
       return;
     }
     list.innerHTML = items
-      .map(
-        (d) => `
-        <a class="card" href="https://${esc(d.subdomain)}.filipino-talent.com" style="text-decoration:none">
-          <strong style="color:var(--text)">${esc(d.subdomain)}.filipino-talent.com</strong>
+      .map((d) => {
+        const href = d.portfolio_url ?? `https://${d.subdomain}.filipino-talent.com`;
+        return `
+        <a class="card" href="${esc(href)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
+          <strong style="color:var(--text)">${esc(d.subdomain)}</strong>
           ${d.github_username ? `<p class="muted" style="margin:8px 0 0;font-size:.9rem">@${esc(d.github_username)}</p>` : ''}
-        </a>`,
-      )
+        </a>`;
+      })
       .join('');
   }
 
