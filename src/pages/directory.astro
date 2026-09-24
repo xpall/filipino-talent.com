@@ -29,7 +29,6 @@ import Base from '../layouts/Base.astro';
 
   interface Domain {
     subdomain: string;
-    portfolio_url: string | null;
     github_username: string | null;
     created_at: string;
   }
@@ -49,7 +48,7 @@ import Base from '../layouts/Base.astro';
     }
     list.innerHTML = items
       .map((d) => {
-        const href = d.portfolio_url ?? `https://${d.subdomain}.filipino-talent.com`;
+        const href = `https://${d.subdomain}.filipino-talent.com`;
         const added = d.created_at ? d.created_at.slice(0, 10) : '';
         return `
         <a class="card" href="${esc(href)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
