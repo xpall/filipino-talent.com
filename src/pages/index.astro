@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+
+const hosts = [
+  { name: 'GitHub Pages', target: 'username.github.io', note: 'Free forever, works with a repo' },
+  { name: 'Cloudflare Pages', target: 'project.pages.dev', note: 'Free, fast, custom domains' },
+  { name: 'Netlify', target: 'site.netlify.app', note: 'Free tier, drag-and-drop deploy' },
+  { name: 'Vercel', target: 'project.vercel.app', note: 'Great for Next.js portfolios' },
+  { name: 'Firebase Hosting', target: 'project.web.app', note: 'Free Spark plan' },
+  { name: 'Carrd', target: 'yourname.carrd.co', note: 'Simple one-page sites' },
+];
+---
+
+<Base>
+<section>
+  <span class="tag">Free · For Filipino remote workers</span>
+  <h1>Your own <span style="color:var(--brand)">yourname</span>.filipino-talent.com</h1>
+  <p class="lead">
+    Already have a portfolio on GitHub Pages, Cloudflare Pages, Netlify, or Vercel?
+    Put it on a clean, professional subdomain for free. We handle the DNS, you keep
+    your site.
+  </p>
+  <p style="margin-top:24px">
+    <a class="btn" href="/submit">Get your subdomain</a>
+    <a class="btn secondary" href="/guide" style="margin-left:8px">Read the guide</a>
+  </p>
+  <p class="muted" style="margin-top:20px;font-size:.9rem">
+    A free service for Filipino remote workers, and it stays free as long as it can
+    run within Cloudflare's free tier. Built for aspiring remote workers: once you
+    can afford your own domain, email
+    <a href="mailto:remove@filipino-talent.com">remove@filipino-talent.com</a> to
+    remove your subdomain and free the name for the next person.
+  </p>
+</section>
+
+<hr />
+
+<h2>How it works</h2>
+<ol class="steps">
+  <li>
+    <strong>Submit the form.</strong> Tell us the name you want, your portfolio URL,
+    and where it is hosted.
+  </li>
+  <li>
+    <strong>It goes live.</strong> Your subdomain is published automatically,
+    usually within 15 minutes. Email <code>verify@filipino-talent.com</code> from
+    the address on your portfolio to confirm it is yours. If we do not hear from
+    you within a day, we remove it.
+  </li>
+  <li>
+    <strong>We check it.</strong> A maintainer reviews new subdomains and removes
+    any that break the rules.
+  </li>
+</ol>
+
+<h2>Works with the host you already use</h2>
+<div class="grid">
+  {hosts.map((h) => (
+    <div class="card">
+      <strong>{h.name}</strong>
+      <div class="muted mono" style="font-size:.85rem;margin:6px 0">{h.target}</div>
+      <div class="muted" style="font-size:.9rem">{h.note}</div>
+    </div>
+  ))}
+</div>
+
+<hr />
+
+<section class="card" style="text-align:center">
+  <h2 style="margin-top:0">Ready to look professional?</h2>
+  <p class="muted">It takes about two minutes. No cost, no catch.</p>
+  <a class="btn" href="/submit">Claim your subdomain</a>
+  <p style="margin-top:16px">
+    <a href="/directory">See who already has one →</a>
+  </p>
+</section>
+</Base>

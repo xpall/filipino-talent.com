@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+
+const sections = [
+  {
+    title: 'What you get',
+    body: 'A free subdomain such as yourname.filipino-talent.com that points DNS to a site you control. We provide DNS records only and do not host your content. This is a free service for Filipino remote workers and stays free as long as it can run within Cloudflare\'s free tier.',
+  },
+  {
+    title: 'Eligibility and accuracy',
+    body: 'Request only names you are entitled to use. Do not impersonate people, brands, or organizations. Provide accurate information, including your legal name, a working email you control, and a live portfolio URL. Subdomains are published automatically; confirm yours within a day by emailing verify@filipino-talent.com from the address listed on your portfolio, or we may remove it. We also review published subdomains after the fact and may remove any at any time for violations or operational reasons. This is for aspiring remote workers: once you can afford your own domain, email remove@filipino-talent.com to release your subdomain for someone else.',
+  },
+  {
+    title: 'Acceptable use',
+    body: 'Do not use a subdomain to host or promote illegal content, phishing, malware, scams, impersonation, harassment, hate, explicit material, spam, fraud, or content that infringes intellectual property or privacy.',
+  },
+  {
+    title: 'Content and responsibility',
+    body: 'You are solely responsible for your site and its availability. The service is provided "as is" without warranty. We may add, change, or remove DNS records at any time to protect the service.',
+  },
+  {
+    title: 'Moderation and removal',
+    body: 'We may reject, suspend, or remove any subdomain at any time, with or without notice, for violations, security concerns, or operational reasons. Inactive or broken subdomains may be reclaimed.',
+  },
+  {
+    title: 'Data',
+    body: 'Public: the subdomain, portfolio URL, optional GitHub username, and DNS record are published in the public registry and directory. Private: your legal name, email, IP address, and request metadata are stored privately for verification and abuse handling.',
+  },
+  {
+    title: 'Not affiliated',
+    body: 'This is an independent community project. Subdomains do not imply endorsement, employment, or affiliation with the maintainers.',
+  },
+  {
+    title: 'Changes',
+    body: 'These terms may change. Continued use after a change means you accept the updated terms.',
+  },
+];
+---
+
+<Base>
+<section>
+  <h1>Terms of Use</h1>
+  <p class="lead">These terms govern the use of subdomains under filipino-talent.com.</p>
+</section>
+
+<div class="card" style="max-width:720px">
+  {sections.map((s, i) => (
+    <>
+      <h2 style={i === 0 ? 'margin-top:0' : undefined}>{i + 1}. {s.title}</h2>
+      <p class="muted">{s.body}</p>
+    </>
+  ))}
+  <h2>Contact</h2>
+  <p class="muted">
+    General: <code>verify@filipino-talent.com</code><br />
+    Removal requests: <code>remove@filipino-talent.com</code><br />
+    Abuse or takedown: <code>abuse@filipino-talent.com</code>
+  </p>
+</div>
+</Base>

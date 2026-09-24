@@ -1,0 +1,160 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base>
+<section>
+  <h1>Get your subdomain</h1>
+  <p class="lead">
+    Fill this out and it goes live automatically, usually within 15 minutes.
+    Email us from your portfolio address to confirm it is yours. See the
+    <a href="/guide">guide</a> if you are unsure what to enter.
+  </p>
+</section>
+
+<div id="form-wrap" class="card" style="max-width:640px">
+  <form id="request-form" novalidate>
+    <label for="subdomain">Subdomain you want</label>
+    <div style="display:flex;align-items:center;gap:8px">
+      <input id="subdomain" name="subdomain" placeholder="juan-dela-cruz" autocomplete="off" required />
+      <span class="muted mono">.filipino-talent.com</span>
+    </div>
+    <p class="hint">Lowercase letters, numbers and hyphens. Prefer your name.</p>
+
+    <label for="legalName">Full legal name</label>
+    <input id="legalName" name="legalName" placeholder="Juan Dela Cruz" autocomplete="name" required />
+    <p class="hint">Used only to review your request. Never published.</p>
+
+    <label for="email">Email shown on your portfolio</label>
+    <input id="email" name="email" type="email" placeholder="juan@example.com" autocomplete="email" required />
+    <p class="hint">
+      Email us from this address at <code>verify@filipino-talent.com</code> to
+      confirm it is yours. If we do not hear from you within a day, we remove the
+      subdomain. Never published.
+    </p>
+
+    <label for="portfolioUrl">Your portfolio URL</label>
+    <input id="portfolioUrl" name="portfolioUrl" type="url" placeholder="https://juan-dela-cruz.github.io" required />
+    <p class="hint">Must start with https:// and be your own site.</p>
+
+    <label for="githubUsername">GitHub username (optional)</label>
+    <input id="githubUsername" name="githubUsername" placeholder="juan-dela-cruz" autocomplete="username" />
+    <p class="hint">Optional. Shown on the directory when provided.</p>
+
+    <label for="recordType">Record type</label>
+    <select id="recordType" name="recordType">
+      <option value="CNAME" selected>CNAME: point to a host (recommended)</option>
+      <option value="A">A: IPv4 address</option>
+      <option value="AAAA">AAAA: IPv6 address</option>
+      <option value="TXT">TXT: text record</option>
+    </select>
+
+    <label for="recordValue">Target</label>
+    <input id="recordValue" name="recordValue" list="targets" placeholder="juan-dela-cruz.github.io" required />
+    <datalist id="targets">
+      <option value="username.github.io"></option>
+      <option value="project.pages.dev"></option>
+      <option value="site.netlify.app"></option>
+      <option value="project.vercel.app"></option>
+      <option value="project.web.app"></option>
+      <option value="yourname.carrd.co"></option>
+    </datalist>
+    <p class="hint" id="target-hint">
+      For a CNAME, enter the hostname only, with no <code>https://</code> and no path.
+    </p>
+
+    <label class="checkline">
+      <input id="agreeToTerms" name="agreeToTerms" type="checkbox" required />
+      <span>I agree to the <a href="/terms" target="_blank">Terms of Use</a> and confirm this site is mine.</span>
+    </label>
+
+    <div class="honeypot" aria-hidden="true">
+      <label for="website">Website</label>
+      <input id="website" name="website" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <p style="margin-top:22px">
+      <button class="btn" type="submit" id="submit-btn">Submit request</button>
+    </p>
+    <p class="hint" style="margin-top:18px">
+      This is for aspiring remote workers. When you can afford your own domain,
+      email <a href="mailto:remove@filipino-talent.com">remove@filipino-talent.com</a>
+      to remove your subdomain and free the name for others.
+    </p>
+  </form>
+</div>
+
+<div id="result" hidden></div>
+
+<script>
+  const form = document.getElementById('request-form') as HTMLFormElement;
+  const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+  const result = document.getElementById('result') as HTMLDivElement;
+  const formWrap = document.getElementById('form-wrap') as HTMLDivElement;
+  const API = (import.meta.env.PUBLIC_API_BASE ?? 'https://api.filipino-talent.com').replace(/\/$/, '');
+
+  function show(html: string, kind = '') {
+    result.className = `notice ${kind}`;
+    result.innerHTML = html;
+    result.hidden = false;
+    result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+
+    const data = Object.fromEntries(new FormData(form).entries());
+    const payload = {
+      subdomain: data.subdomain,
+      legalName: data.legalName,
+      email: data.email,
+      portfolioUrl: data.portfolioUrl,
+      githubUsername: data.githubUsername,
+      recordType: data.recordType,
+      recordValue: data.recordValue,
+      agreeToTerms: (document.getElementById('agreeToTerms') as HTMLInputElement).checked,
+      website: data.website,
+    };
+
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+    result.hidden = true;
+
+    try {
+      const res = await fetch(`${API}/submit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const body = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        const details = Array.isArray(body.details)
+          ? `<ul>${body.details.map((d: string) => `<li>${d}</li>`).join('')}</ul>`
+          : '';
+        show(`<strong>Could not submit.</strong><br>${body.error ?? 'Unknown error.'}${details}`, 'error');
+        return;
+      }
+
+      formWrap.hidden = true;
+      const steps = (body.instructions as string[])
+        .map((line: string) => `<li>${line}</li>`)
+        .join('');
+      show(
+        `<h2 style="margin-top:0">Request received</h2>
+         <ol>${steps}</ol>
+         <p>Your site goes live at <strong>${body.subdomain}</strong>, usually
+            within 15 minutes. A maintainer reviews it afterward and may remove
+            it if it breaks the rules.</p>`,
+        'ok',
+      );
+    } catch (err) {
+      show(`<strong>Network error.</strong> Please try again in a moment.`, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Submit request';
+    }
+  });
+</script>
+</Base>

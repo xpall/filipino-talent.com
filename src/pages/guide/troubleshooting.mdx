@@ -1,0 +1,70 @@
+---
+layout: ../../layouts/Base.astro
+title: Troubleshooting · filipino-talent.com
+description: Fix common problems with your filipino-talent.com subdomain.
+---
+
+# Troubleshooting
+
+## How long until my subdomain is live?
+
+Usually within 15 minutes. It publishes automatically. To help us confirm it is
+yours, email `verify@filipino-talent.com` from the address shown on your
+portfolio (no code needed). If we do not hear from you within a day, we remove
+the subdomain. A maintainer also reviews published subdomains and may remove any
+that break the rules.
+
+## Why was my subdomain removed?
+
+We review subdomains after they publish and remove ones that break the
+[Terms](/terms), such as impersonation, phishing, or illegal content.
+
+## My subdomain shows "404" or a host error page
+
+You probably have not added the custom domain in your host's dashboard yet. DNS
+alone is not enough. The host also needs to know it should answer for your
+subdomain.
+
+- GitHub Pages → Settings → Pages → Custom domain
+- Cloudflare Pages → Custom domains
+- Netlify → Domain management
+- Vercel → Settings → Domains
+
+## It says the site is "not secure" or shows an HTTPS warning
+
+SSL certificates are issued automatically by your host after DNS is detected,
+but the first one can take up to an hour. Wait, then reload. On GitHub Pages,
+also tick **Enforce HTTPS** once it is available.
+
+## The subdomain does not load at all
+
+- DNS can take a few minutes to spread. Try again after 10 minutes.
+- Make sure your portfolio URL itself works. If the host site is down, the
+  subdomain will be down too.
+- Clear your browser cache or try a private window.
+
+## I changed my host and my subdomain stopped working
+
+Your CNAME target changed, so we need to update the record. Email
+`verify@filipino-talent.com` with your subdomain and the new target.
+
+## Can I use my Canva site?
+
+No. Free Canva cannot use a custom domain. See
+[Using Canva](/guide/canva) for free alternatives.
+
+## Can I get email at my subdomain?
+
+No. This service only creates web (DNS) records. It does not provide mailboxes.
+
+## I want a different subdomain, or to remove mine
+
+Email `verify@filipino-talent.com` with the current and desired name, or
+`remove@filipino-talent.com` to remove your subdomain. Note that names that are
+released can be taken by someone else later.
+
+## My request was rejected
+
+Common reasons: the subdomain is reserved, the target host is not supported, the
+name appears to impersonate someone, or we could not confirm the portfolio is
+yours. You can fix the issue and [submit again](/submit).

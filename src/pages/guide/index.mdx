@@ -1,0 +1,106 @@
+---
+layout: ../../layouts/Base.astro
+title: Guide · filipino-talent.com
+description: Step-by-step guide to put your portfolio on a free filipino-talent.com subdomain.
+---
+
+# Guide
+
+Written for people who can fill out forms and copy-paste. You do not need to know
+what DNS means. You only need a site that is already online.
+
+## Before you start
+
+- [ ] Your portfolio is **already published**, and you can open its link in a browser (for example `https://juan-dela-cruz.github.io`).
+- [ ] You know the **email address** shown on that portfolio.
+- [ ] You have an idea of the **subdomain** you want, usually your name.
+
+> **Heads up about Canva:** free Canva websites cannot use a custom domain, so
+> they cannot be connected here. See [Using Canva](/guide/canva) for free
+> workarounds.
+
+## 1. Pick the host you already use
+
+If your site is already online, skip to step 2. Otherwise choose one and follow
+its guide:
+
+| Host | Free? | Guide |
+| --- | --- | --- |
+| GitHub Pages | Yes | [GitHub Pages](/guide/github-pages) |
+| Cloudflare Pages | Yes | [Cloudflare Pages](/guide/cloudflare-pages) |
+| Netlify | Yes | [Netlify](/guide/netlify) |
+| Vercel | Yes | [Vercel](/guide/vercel) |
+| Canva | No (custom domain) | [Canva workarounds](/guide/canva) |
+
+## 2. Find your host's target
+
+Each host has a default address you point your subdomain at. Examples:
+
+| Host | What you enter as the target |
+| --- | --- |
+| GitHub Pages | `yourusername.github.io` |
+| Cloudflare Pages | `your-project.pages.dev` |
+| Netlify | `your-site.netlify.app` |
+| Vercel | `your-project.vercel.app` |
+
+Enter this in the **Target** field of the form as a
+[CNAME](/guide#what-is-a-cname).
+
+## 3. Submit the form
+
+Go to [Get a subdomain](/submit) and fill in:
+
+- the subdomain you want,
+- your full legal name (used only for review),
+- the email shown on your portfolio,
+- your portfolio URL,
+- your GitHub username (optional),
+- the record type (**CNAME** for most people),
+- the target from step 2.
+
+## 4. It goes live
+
+Your subdomain is published automatically, usually within 15 minutes. Email us
+**from the address on your portfolio** to help us confirm it is yours:
+
+```text
+verify@filipino-talent.com
+```
+
+There is no code to include. If we do not hear from you within a day, we remove
+the subdomain. A maintainer also reviews published subdomains and may remove any
+that break the rules.
+
+## 5. After it goes live
+
+Once it is live, you can point your site at it:
+
+1. Add your subdomain as a **custom domain** in your host's dashboard
+   (GitHub Pages, Cloudflare Pages, and so on). Each host guide explains how.
+2. Wait a few minutes for DNS and HTTPS. HTTPS can take up to an hour the first
+   time.
+3. Open `https://yourname.filipino-talent.com` and confirm it loads.
+
+If something does not work, see [Troubleshooting](/guide/troubleshooting).
+
+---
+
+## What is a CNAME?
+
+A CNAME is a DNS record that says "this name is an alias for that other name."
+When you point `yourname.filipino-talent.com` at `yourusername.github.io`, you
+are telling the internet to load your GitHub Pages site at your new address.
+
+It is the easiest option because when your host changes servers, things keep
+working automatically.
+
+## Do I keep it forever?
+
+No. This is for aspiring remote workers. Once you can afford your own domain,
+email `remove@filipino-talent.com` to remove your subdomain and free the name
+for the next person.
+
+## What about email?
+
+This service only handles the website address (DNS records for the web). It does
+**not** provide email mailboxes at your subdomain.

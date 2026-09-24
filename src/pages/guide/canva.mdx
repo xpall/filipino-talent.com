@@ -1,0 +1,49 @@
+---
+layout: ../../layouts/Base.astro
+title: Canva and other builders · filipino-talent.com
+description: Why free Canva sites cannot use a custom domain and what to do instead.
+---
+
+# Using Canva (and other builders)
+
+A lot of people build their portfolio in Canva. There is one important catch:
+
+> **Free Canva websites cannot use a custom domain.** Connecting your own domain
+> is a Canva Pro feature, and Canva does not accept a plain external CNAME the
+> way GitHub Pages, Cloudflare Pages, Netlify or Vercel do.
+
+We cannot add a DNS record that points at a Canva free site, because there is no
+target address on Canva's side that will answer to your subdomain. It would
+produce a broken page.
+
+## Your options
+
+### Option A: Rebuild a quick page for free (recommended)
+
+If you already have the design in Canva, you can recreate a simple one-page
+portfolio in about 30 minutes:
+
+- **Carrd:** free plan supports a custom domain. Recreate your sections, then
+  follow the same [submit](/submit) flow with target `yourname.carrd.co`.
+- **GitHub Pages:** free. See the [GitHub Pages guide](/guide/github-pages).
+  You can export your Canva design as images and place them on the page.
+
+### Option B: Keep the Canva share link
+
+Your published Canva site already has a link like
+`https://yourname.my.canva.site`. You can share that directly. It will not use
+`filipino-talent.com`, but it works today.
+
+### Option C: Canva Pro
+
+If you upgrade to Canva Pro, Canva's custom-domain setup uses its own DNS
+records. Contact us at `verify@filipino-talent.com` before submitting and we will
+check whether the required target can be supported.
+
+## Other builders
+
+- **Webflow, Notion, Wix, Squarespace, WordPress.com, Medium:** custom domains
+  are paid features and generally need their own verification flow, so they are
+  not on our allow-list.
+- If your host gives you a target like `something.example.com` and you are not
+  sure it works, email us and we will take a look.

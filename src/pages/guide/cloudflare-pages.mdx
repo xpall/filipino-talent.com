@@ -1,0 +1,36 @@
+---
+layout: ../../layouts/Base.astro
+title: Cloudflare Pages guide · filipino-talent.com
+description: Deploy for free with Cloudflare Pages and connect your filipino-talent.com subdomain.
+---
+
+# Cloudflare Pages
+
+Cloudflare Pages has a generous free tier and is fast in the Philippines.
+
+## 1. Get your site online
+
+1. Create a free Cloudflare account.
+2. In the dashboard go to **Workers & Pages → Create → Pages**.
+3. Connect a Git repository (GitHub/GitLab) or upload files directly.
+4. Deploy. You get a URL like `https://your-project.pages.dev`.
+
+## 2. Submit your request
+
+On the [submit form](/submit):
+
+- **Record type:** `CNAME`
+- **Target:** `your-project.pages.dev`
+
+## 3. After it is live
+
+1. Open your Pages project → **Custom domains → Set up a custom domain**.
+2. Enter `yourname.filipino-talent.com`.
+3. Because we already published the DNS record, Cloudflare verifies it
+   automatically and issues HTTPS.
+
+## Notes
+
+- If Cloudflare Pages asks you to "add a CNAME record", it is already done by us.
+  Wait a few minutes and retry the verification.
+- The target is the project's `pages.dev` address, not a deployment hash URL.
