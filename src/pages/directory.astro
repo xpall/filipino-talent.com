@@ -22,8 +22,6 @@ import Base from '../layouts/Base.astro';
     subdomain: string;
     portfolio_url: string | null;
     github_username: string | null;
-    record_type: string;
-    record_value: string;
   }
 
   let domains: Domain[] = [];
@@ -45,7 +43,6 @@ import Base from '../layouts/Base.astro';
         <a class="card" href="https://${esc(d.subdomain)}.filipino-talent.com" style="text-decoration:none">
           <strong style="color:var(--text)">${esc(d.subdomain)}.filipino-talent.com</strong>
           ${d.github_username ? `<p class="muted" style="margin:8px 0 0;font-size:.9rem">@${esc(d.github_username)}</p>` : ''}
-          <p class="muted mono" style="margin:6px 0 0;font-size:.78rem;word-break:break-all">${esc(d.record_type)} ${esc(d.record_value)}</p>
         </a>`,
       )
       .join('');
@@ -58,8 +55,7 @@ import Base from '../layouts/Base.astro';
         (d) =>
           !q ||
           d.subdomain.toLowerCase().includes(q) ||
-          (d.github_username ?? '').toLowerCase().includes(q) ||
-          d.record_value.toLowerCase().includes(q),
+          (d.github_username ?? '').toLowerCase().includes(q),
       ),
     );
   });
