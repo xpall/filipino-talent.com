@@ -4,12 +4,17 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  frontmatter?: { title?: string; description?: string };
 }
 
-const {
-  title = 'filipino-talent.com · free subdomains for Filipino remote workers',
-  description = 'Claim a free yourname.filipino-talent.com subdomain and point it at your portfolio on GitHub Pages, Cloudflare Pages, Netlify, Vercel, or any static host.',
-} = Astro.props;
+const { title, description, frontmatter } = Astro.props;
+
+const pageTitle =
+  title ?? frontmatter?.title ?? 'Filipino Talent · Professional web addresses for Filipino remote workers';
+const pageDescription =
+  description ??
+  frontmatter?.description ??
+  'Claim a free yourname.filipino-talent.com subdomain and point it at your portfolio on GitHub Pages, Cloudflare Pages, Netlify, Vercel, or any static host.';
 
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site ?? 'https://filipino-talent.com').href;
@@ -28,15 +33,15 @@ const isActive = (href: string) => href === '/' ? path === '/' : path.startsWith
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0b0d10" media="(prefers-color-scheme: dark)" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="filipino-talent.com" />
+    <meta property="og:site_name" content="Filipino Talent" />
     <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary" />
     <script is:inline>
