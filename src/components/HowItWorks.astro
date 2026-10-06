@@ -1,0 +1,169 @@
+---
+---
+
+<figure class="hiw">
+  <svg
+    class="hiw-svg"
+    viewBox="0 0 400 64"
+    role="img"
+    aria-labelledby="hiw-title hiw-desc"
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <title id="hiw-title">Your address, rewritten</title>
+    <desc id="hiw-desc">
+      A typical GitHub Pages link, juan1.github.io, is replaced by the cleaner
+      juan-dela-cruz.filipino-talent.com.
+    </desc>
+    <defs>
+      <clipPath id="hiw-del"><rect class="hiw-del-rect" x="20" y="0" width="180" height="64"/></clipPath>
+      <clipPath id="hiw-typ"><rect class="hiw-typ-rect" x="20" y="0" width="380" height="64"/></clipPath>
+    </defs>
+
+    <g class="hiw-old" clip-path="url(#hiw-del)">
+      <text class="hiw-mono hiw-line hiw-line-old" x="24" y="38" font-size="15">juan1.github.io{'\u00A0'}</text>
+    </g>
+    <g class="hiw-new" clip-path="url(#hiw-typ)">
+      <g class="hiw-new-inner">
+        <text class="hiw-mono hiw-line" x="24" y="38" font-size="15">juan-dela-cruz.<tspan class="hiw-brand">filipino-talent.com</tspan>{'\u00A0'}</text>
+        <text class="hiw-mono hiw-flash" x="24" y="38" font-size="15">juan-dela-cruz.filipino-talent.com{'\u00A0'}</text>
+      </g>
+    </g>
+  </svg>
+</figure>
+
+<style is:global>
+  .hiw {
+    --hiw-ink: var(--text);
+    --hiw-muted: var(--muted);
+    --hiw-brand: var(--brand-text);
+    --hiw-ok: #12b76a;
+    --hiw-dur: 3.5s;
+
+    background-color: var(--bg-soft);
+    border-radius: var(--radius);
+    padding: var(--space-5);
+    margin: var(--space-5) 0 0;
+    display: flex;
+    justify-content: center;
+    animation: hiw-wash var(--hiw-dur) ease-out infinite both;
+  }
+
+  .hiw-svg {
+    display: block;
+    width: 100%;
+    max-width: 640px;
+    height: auto;
+  }
+
+  .hiw-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  .hiw-line { fill: var(--hiw-ink); font-weight: 600; }
+  .hiw-line-old { fill: var(--hiw-muted); font-weight: 400; }
+  .hiw-brand { fill: var(--hiw-brand); }
+  .hiw-flash { fill: var(--hiw-ok); font-weight: 600; opacity: 0; }
+
+  .hiw-del-rect,
+  .hiw-typ-rect {
+    transform: scaleX(1);
+    transform-origin: left center;
+    transform-box: fill-box;
+  }
+  .hiw-old { animation: hiw-oldfade var(--hiw-dur) ease-out infinite both; }
+  .hiw-del-rect { animation: hiw-del var(--hiw-dur) infinite both; }
+  .hiw-typ-rect { animation: hiw-typ var(--hiw-dur) infinite both; }
+  .hiw-new {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation:
+      hiw-newfade var(--hiw-dur) linear infinite both,
+      hiw-pop var(--hiw-dur) ease-out infinite both;
+  }
+  .hiw-flash { animation: hiw-flash var(--hiw-dur) ease-out infinite both; }
+
+  .hiw.hiw-paused,
+  .hiw.hiw-paused * { animation-play-state: paused !important; }
+
+  @keyframes hiw-oldfade {
+    0% { opacity: 0; }
+    6%, 100% { opacity: 1; }
+  }
+  @keyframes hiw-newfade {
+    0%, 92% { opacity: 1; }
+    98%, 100% { opacity: 0; }
+  }
+  @keyframes hiw-del {
+    0%, 14% { transform: scaleX(1); animation-timing-function: cubic-bezier(0.42, 0, 1, 1); }
+    46%, 100% { transform: scaleX(0); }
+  }
+  @keyframes hiw-typ {
+    0%, 46% { transform: scaleX(0); animation-timing-function: cubic-bezier(0, 0, 0.58, 1); }
+    80%, 100% { transform: scaleX(1); }
+  }
+  @keyframes hiw-pop {
+    0%, 78% { transform: scale(1); }
+    83% { transform: scale(1.05); }
+    88%, 100% { transform: scale(1); }
+  }
+  @keyframes hiw-flash {
+    0%, 78% { opacity: 0; }
+    82% { opacity: 0.92; }
+    90%, 100% { opacity: 0; }
+  }
+  @keyframes hiw-wash {
+    0%, 78% { background-color: var(--bg-soft); }
+    82% { background-color: color-mix(in srgb, var(--hiw-ok) 16%, var(--bg-soft)); }
+    90%, 100% { background-color: var(--bg-soft); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hiw { animation: none !important; background-color: var(--bg-soft); }
+    .hiw-svg * { animation: none !important; }
+    .hiw-del-rect { transform: scaleX(0); }
+    .hiw-typ-rect { transform: scaleX(1); }
+    .hiw-flash { display: none; }
+    .hiw-old,
+    .hiw-new,
+    .hiw-new-inner { opacity: 1; }
+  }
+</style>
+
+<script>
+  const figures = document.querySelectorAll('.hiw');
+
+  // Size each reveal clip to the real rendered text, so nothing gets trimmed
+  // and the wipe edge tracks the text regardless of the monospace font metrics.
+  const fitClips = () => {
+    figures.forEach((fig) => {
+      const oldText = fig.querySelector('.hiw-line-old');
+      const newText = fig.querySelector('.hiw-new-inner .hiw-line');
+      const delRect = fig.querySelector('.hiw-del-rect');
+      const typRect = fig.querySelector('.hiw-typ-rect');
+      try {
+        if (oldText instanceof SVGTextElement && delRect) {
+          delRect.setAttribute('width', String(Math.ceil(oldText.getComputedTextLength()) + 8));
+        }
+        if (newText instanceof SVGTextElement && typRect) {
+          typRect.setAttribute('width', String(Math.ceil(newText.getComputedTextLength()) + 8));
+        }
+      } catch (e) {}
+    });
+  };
+
+  fitClips();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitClips);
+  window.addEventListener('resize', fitClips);
+
+  if (figures.length && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          entry.target.classList.toggle('hiw-paused', !entry.isIntersecting);
+        }
+      },
+      { rootMargin: '80px' },
+    );
+    figures.forEach((figure) => observer.observe(figure));
+  }
+</script>
