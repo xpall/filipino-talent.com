@@ -12,6 +12,7 @@ const {
 } = Astro.props;
 
 const path = Astro.url.pathname;
+const canonical = new URL(path, Astro.site ?? 'https://filipino-talent.com').href;
 const nav = [
   { href: '/', label: 'Home' },
   { href: '/guide', label: 'Guide' },
@@ -29,45 +30,79 @@ const isActive = (href: string) => href === '/' ? path === '/' : path.startsWith
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0d10" media="(prefers-color-scheme: dark)" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="filipino-talent.com" />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
     <script is:inline>
       (function () {
         var root = document.documentElement;
+        var mq = window.matchMedia('(prefers-color-scheme: dark)');
+        var stored = null;
         try {
-          var saved = localStorage.getItem('theme');
-          var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-          root.setAttribute('data-theme', theme);
-        } catch (e) {
-          root.setAttribute('data-theme', 'light');
+          stored = localStorage.getItem('theme');
+        } catch (e) {}
+        var theme = stored || (mq.matches ? 'dark' : 'light');
+        root.setAttribute('data-theme', theme);
+
+        function apply(next) {
+          root.setAttribute('data-theme', next);
         }
+
         window.addEventListener('DOMContentLoaded', function () {
           var btn = document.getElementById('theme-toggle');
           if (!btn) return;
+          var pressed = function () {
+            btn.setAttribute('aria-pressed', String(root.getAttribute('data-theme') === 'dark'));
+          };
+          pressed();
           btn.addEventListener('click', function () {
             var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            root.setAttribute('data-theme', next);
+            apply(next);
             try {
               localStorage.setItem('theme', next);
             } catch (e) {}
+            pressed();
+          });
+          mq.addEventListener('change', function (e) {
+            var saved = null;
+            try {
+              saved = localStorage.getItem('theme');
+            } catch (err) {}
+            if (!saved) {
+              apply(e.matches ? 'dark' : 'light');
+              pressed();
+            }
           });
         });
       })();
     </script>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <header class="site">
       <div class="wrap">
         <a class="brand" href="/">filipino<span>-talent</span>.com</a>
-        <nav>
+        <nav aria-label="Primary">
           {nav.map((item) => (
             <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
               {item.label}
             </a>
           ))}
         </nav>
-        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme" title="Toggle color theme">
+        <button
+          id="theme-toggle"
+          class="theme-toggle"
+          type="button"
+          aria-label="Toggle color theme"
+          aria-pressed="false"
+          title="Toggle color theme"
+        >
           <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
           </svg>
@@ -79,7 +114,7 @@ const isActive = (href: string) => href === '/' ? path === '/' : path.startsWith
       </div>
     </header>
 
-    <main>
+    <main id="main" tabindex="-1">
       <div class="wrap">
         <slot />
       </div>

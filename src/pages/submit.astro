@@ -2,77 +2,111 @@
 import Base from '../layouts/Base.astro';
 ---
 
-<Base>
+<Base
+  title="Get your subdomain · filipino-talent.com"
+  description="Claim a free yourname.filipino-talent.com subdomain and point it at your portfolio on GitHub Pages, Cloudflare Pages, Netlify, or Vercel."
+>
 <section>
   <h1>Get your subdomain</h1>
   <p class="lead">
     Fill this out and it goes live automatically, usually within 15 minutes.
-    Email us from your portfolio address to confirm it is yours. See the
-    <a href="/guide">guide</a> if you are unsure what to enter.
+    We fill in the technical parts for you. See the <a href="/guide">guide</a> if
+    you are unsure what to enter.
   </p>
 </section>
 
 <div id="form-wrap" class="card" style="max-width:640px">
   <form id="request-form" novalidate>
-    <label for="subdomain">Subdomain you want</label>
-    <div style="display:flex;align-items:center;gap:8px">
-      <input id="subdomain" name="subdomain" placeholder="juan-dela-cruz" autocomplete="off" required />
+    <label for="subdomain">Choose your subdomain</label>
+    <div class="subdomain-row">
+      <input
+        id="subdomain"
+        name="subdomain"
+        placeholder="juan-dela-cruz"
+        autocomplete="off"
+        required
+        pattern="[a-z0-9]([a-z0-9-]*[a-z0-9])?"
+        aria-describedby="subdomain-hint"
+      />
       <span class="muted mono">.filipino-talent.com</span>
     </div>
-    <p class="hint">Lowercase letters, numbers and hyphens. Prefer your name.</p>
+    <p class="hint" id="subdomain-hint">Lowercase letters, numbers and hyphens. Prefer your name.</p>
+    <p class="field-error" id="subdomain-error" hidden></p>
 
-    <label for="legalName">Full legal name</label>
-    <input id="legalName" name="legalName" placeholder="Juan Dela Cruz" autocomplete="name" required />
-    <p class="hint">Used only to review your request. Never published.</p>
+    <label for="legalName">Your full name</label>
+    <input id="legalName" name="legalName" placeholder="Juan Dela Cruz" autocomplete="name" required aria-describedby="legalName-hint" />
+    <p class="hint" id="legalName-hint">Private — used only to review your request. Never published.</p>
+    <p class="field-error" id="legalName-error" hidden></p>
 
     <label for="email">Email shown on your portfolio</label>
-    <input id="email" name="email" type="email" placeholder="juan@example.com" autocomplete="email" required />
-    <p class="hint">
-      Email us from this address at <code>verify@filipino-talent.com</code> to
-      confirm it is yours. If we do not hear from you within a day, we remove the
-      subdomain. Never published.
-    </p>
+    <input id="email" name="email" type="email" placeholder="juan@example.com" autocomplete="email" required aria-describedby="email-hint" />
+    <p class="hint" id="email-hint">We email you here to confirm the subdomain is yours. Never published.</p>
+    <p class="field-error" id="email-error" hidden></p>
 
     <label for="portfolioUrl">Your portfolio URL</label>
-    <input id="portfolioUrl" name="portfolioUrl" type="url" placeholder="https://juan-dela-cruz.github.io" required />
-    <p class="hint">Must start with https:// and be your own site.</p>
+    <input
+      id="portfolioUrl"
+      name="portfolioUrl"
+      type="url"
+      placeholder="https://juan-dela-cruz.github.io"
+      required
+      pattern="https://.+"
+      aria-describedby="portfolioUrl-hint"
+    />
+    <p class="hint" id="portfolioUrl-hint">Must start with https:// and be your own site.</p>
+    <p class="field-error" id="portfolioUrl-error" hidden></p>
 
     <label for="githubUsername">GitHub username (optional)</label>
     <input id="githubUsername" name="githubUsername" placeholder="juan-dela-cruz" autocomplete="username" />
     <p class="hint">Optional. Shown on the directory when provided.</p>
 
-    <label for="recordType">Record type</label>
-    <select id="recordType" name="recordType">
-      <option value="CNAME" selected>CNAME: point to a host (recommended)</option>
-      <option value="A">A: IPv4 address</option>
-      <option value="AAAA">AAAA: IPv6 address</option>
-      <option value="TXT">TXT: text record</option>
-    </select>
+    <label for="recordValue">DNS target</label>
+    <input
+      id="recordValue"
+      name="recordValue"
+      list="targets"
+      placeholder="juan-dela-cruz.github.io"
+      autocomplete="off"
+      required
+      aria-describedby="target-hint target-warning"
+    />
+    <datalist id="targets">
+      <option value="username.github.io"></option>
+      <option value="project.pages.dev"></option>
+      <option value="project.vercel.app"></option>
+      <option value="site.netlify.app"></option>
+    </datalist>
+    <p class="hint" id="target-hint">
+      We fill this in from your portfolio URL. Only change it if your host gave
+      you a specific target. Enter the hostname only, with no <code>https://</code>
+      and no path.
+    </p>
+    <p class="hint" id="target-warning" hidden></p>
+    <p class="field-error" id="recordValue-error" hidden></p>
 
     <details id="advanced-target" class="advanced">
-      <summary>Advanced: DNS target</summary>
+      <summary>Advanced: record type</summary>
       <div style="margin-top:10px">
-        <label for="recordValue">Target</label>
-        <input id="recordValue" name="recordValue" list="targets" placeholder="juan-dela-cruz.github.io" autocomplete="off" />
-        <datalist id="targets">
-          <option value="username.github.io"></option>
-          <option value="project.pages.dev"></option>
-          <option value="project.vercel.app"></option>
-          <option value="site.netlify.app"></option>
-        </datalist>
-        <p class="hint" id="target-hint">
-          We fill this in from your portfolio URL. Only change it if your host gave
-          you a specific target. Enter the hostname only, with no <code>https://</code>
-          and no path.
+        <label for="recordType">Record type</label>
+        <select id="recordType" name="recordType">
+          <option value="CNAME" selected>CNAME: point to a host (recommended)</option>
+          <option value="A">A: IPv4 address</option>
+          <option value="AAAA">AAAA: IPv6 address</option>
+          <option value="TXT">TXT: text record</option>
+        </select>
+        <p class="hint">
+          CNAME is right for almost everyone — it points to the host you already
+          use. Only change this if your host told you otherwise.
         </p>
-        <p class="hint" id="target-warning" hidden></p>
       </div>
     </details>
 
     <label class="checkline">
-      <input id="agreeToTerms" name="agreeToTerms" type="checkbox" required />
-      <span>I agree to the <a href="/terms" target="_blank">Terms of Use</a> and confirm this site is mine.</span>
+      <input id="agreeToTerms" name="agreeToTerms" type="checkbox" required aria-describedby="terms-hint" />
+      <span>I agree to the <a href="/terms" target="_blank" rel="noopener">Terms of Use</a> and confirm this site is mine.</span>
     </label>
+    <p class="hint" id="terms-hint">Filipino remote workers only. This is an independent community project — not a job board, and not affiliated with any employer.</p>
+    <p class="field-error" id="agreeToTerms-error" hidden></p>
 
     <div class="honeypot" aria-hidden="true">
       <label for="website">Website</label>
@@ -90,7 +124,7 @@ import Base from '../layouts/Base.astro';
   </form>
 </div>
 
-<div id="result" hidden></div>
+<div id="result" role="status" aria-live="polite" hidden></div>
 
 <script>
   import { hostnameFromUrl, isAllowedCnameTarget } from '../lib/targets';
@@ -117,7 +151,40 @@ import Base from '../layouts/Base.astro';
   };
   let targetEdited = false;
 
+  const esc = (value: unknown) =>
+    String(value ?? '').replace(
+      /[&<>"']/g,
+      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string,
+    );
+
   const recordType = () => recordTypeSelect.value.toUpperCase();
+
+  function setError(id: string, message: string) {
+    const field = document.getElementById(id) as HTMLInputElement | null;
+    const error = document.getElementById(`${id}-error`) as HTMLParagraphElement | null;
+    if (error) {
+      error.textContent = message;
+      error.hidden = !message;
+    }
+    if (field) {
+      if (message) field.setAttribute('aria-invalid', 'true');
+      else field.removeAttribute('aria-invalid');
+    }
+  }
+
+  function messageFor(field: HTMLInputElement): string {
+    if (!field.required && !field.value.trim() && !field.validity.valid) return '';
+    if (field.validity.valueMissing) {
+      return field.type === 'checkbox' ? 'Please confirm this before continuing.' : 'Please fill this in.';
+    }
+    if (field.validity.typeMismatch && field.type === 'email') return 'Enter a valid email address.';
+    if (field.validity.typeMismatch && field.type === 'url') return 'Enter a full URL, including https://.';
+    if (field.validity.patternMismatch && field.id === 'portfolioUrl') return 'The URL must start with https://.';
+    if (field.validity.patternMismatch && field.id === 'subdomain') {
+      return 'Use lowercase letters, numbers and hyphens only.';
+    }
+    return '';
+  }
 
   function updateTargetWarning() {
     const value = targetInput.value.trim();
@@ -125,7 +192,6 @@ import Base from '../layouts/Base.astro';
       targetWarning.innerHTML =
         'This target is not on our supported hosts list, so the request will be rejected. See <a href="/guide/troubleshooting">Troubleshooting</a>.';
       targetWarning.hidden = false;
-      advanced.open = true;
     } else {
       targetWarning.hidden = true;
       targetWarning.textContent = '';
@@ -163,18 +229,75 @@ import Base from '../layouts/Base.astro';
     updateTargetWarning();
   });
 
+  ['subdomain', 'legalName', 'email', 'portfolioUrl', 'recordValue', 'agreeToTerms'].forEach((id) => {
+    const field = document.getElementById(id) as HTMLInputElement;
+    field?.addEventListener('blur', () => {
+      if (field.id === 'recordValue') {
+        setError('recordValue', field.validity.valid ? '' : 'Please enter your DNS target.');
+        return;
+      }
+      setError(id, messageFor(field));
+    });
+  });
+
   applyRecordType();
 
   function show(html: string, kind = '') {
     result.className = `notice ${kind}`;
     result.innerHTML = html;
     result.hidden = false;
+    result.querySelector<HTMLElement>('[tabindex]')?.focus();
     result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function firstInvalid(): HTMLElement | null {
+    const ids = ['subdomain', 'legalName', 'email', 'portfolioUrl', 'recordValue', 'agreeToTerms'];
+    for (const id of ids) {
+      const field = document.getElementById(id) as HTMLInputElement;
+      if (!field) continue;
+      if (field.id === 'recordValue') {
+        const empty = !field.value.trim();
+        const badCname = recordType() === 'CNAME' && !!field.value.trim() && !isAllowedCnameTarget(field.value);
+        if (empty || badCname) {
+          setError('recordValue', empty ? 'Please enter your DNS target.' : 'That target is not on our supported hosts list.');
+          return field;
+        }
+        setError('recordValue', '');
+        continue;
+      }
+      const msg = messageFor(field);
+      if (msg) {
+        setError(id, msg);
+        return field;
+      }
+      setError(id, '');
+    }
+    return null;
+  }
+
+  function resetForm() {
+    form.reset();
+    targetEdited = false;
+    result.hidden = true;
+    result.className = '';
+    formWrap.hidden = false;
+    ['subdomain', 'legalName', 'email', 'portfolioUrl', 'recordValue', 'agreeToTerms'].forEach((id) =>
+      setError(id, ''),
+    );
+    applyRecordType();
+    (document.getElementById('subdomain') as HTMLInputElement)?.focus();
   }
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
-    if (!form.reportValidity()) return;
+
+    const invalid = firstInvalid();
+    if (invalid) {
+      advanced.open = true;
+      invalid.focus();
+      show('<strong>Could not submit.</strong><br>Please fix the highlighted field above.', 'error');
+      return;
+    }
 
     const type = recordType();
     if (!targetInput.value.trim()) {
@@ -223,39 +346,45 @@ import Base from '../layouts/Base.astro';
 
       if (!res.ok) {
         const details = Array.isArray(body.details)
-          ? `<ul>${body.details.map((d: string) => `<li>${d}</li>`).join('')}</ul>`
+          ? `<ul>${body.details.map((d: string) => `<li>${esc(d)}</li>`).join('')}</ul>`
           : '';
-        show(`<strong>Could not submit.</strong><br>${body.error ?? 'Unknown error.'}${details}`, 'error');
+        show(
+          `<strong>Could not submit.</strong><br>${esc(body.error ?? 'Unknown error.')}${details}`,
+          'error',
+        );
         return;
       }
 
       formWrap.hidden = true;
-      const steps = (body.instructions as string[])
-        .map((line: string) => `<li>${line}</li>`)
-        .join('');
+      const subdomain = esc(body.subdomain);
+      const instructions = Array.isArray(body.instructions) ? body.instructions : [];
+      const steps = instructions.map((line: string) => `<li>${esc(line)}</li>`).join('');
       const guide = connectGuideForTarget(targetInput.value);
       const connect = guide
-        ? `<div class="notice warn" style="margin-top:16px">
-             <strong>Final step:</strong> connect <code>${body.subdomain}</code>
-             in your ${guide.label} dashboard, or the link will show an error.
-             <a href="${CONNECT_GUIDE_PATH}#${guide.anchor}">Open the ${guide.label} steps →</a>
+        ? `<div class="notice" style="margin-top:16px">
+             <strong>One more step:</strong> connect <code>${subdomain}</code>
+             in your ${esc(guide.label)} dashboard so the address loads.
+             <a href="${CONNECT_GUIDE_PATH}#${guide.anchor}">Open the ${esc(guide.label)} steps →</a>
            </div>`
-        : `<div class="notice warn" style="margin-top:16px">
-             <strong>Final step:</strong> connect <code>${body.subdomain}</code>
-             in your host's dashboard, or the link will show an error.
+        : `<div class="notice" style="margin-top:16px">
+             <strong>One more step:</strong> connect <code>${subdomain}</code>
+             in your host's dashboard so the address loads.
              <a href="${CONNECT_GUIDE_PATH}">See how →</a>
            </div>`;
       show(
-        `<h2 style="margin-top:0">Request received</h2>
+        `<h2 id="result-title" class="mt-0" tabindex="-1">Request received</h2>
          <ol>${steps}</ol>
-         <p>Your site goes live at <strong>${body.subdomain}</strong>, usually
-            within 15 minutes. A maintainer reviews it afterward and may remove
-            it if it breaks the rules.</p>
-         ${connect}`,
+         <p>Your address goes live at <strong>${subdomain}.filipino-talent.com</strong>,
+            usually within 15 minutes. A maintainer reviews it afterward.</p>
+         ${connect}
+         <p style="margin-bottom:0">Nothing to do until we hear from you. We will email
+            you if anything needs confirming.</p>
+         <p style="margin-bottom:0"><button class="btn secondary" type="button" id="again">Submit another</button></p>`,
         'ok',
       );
+      document.getElementById('again')?.addEventListener('click', resetForm);
     } catch (err) {
-      show(`<strong>Network error.</strong> Please try again in a moment.`, 'error');
+      show('<strong>Network error.</strong> Please try again in a moment.', 'error');
     } finally {
       btn.disabled = false;
       btn.textContent = 'Submit request';

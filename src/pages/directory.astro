@@ -2,27 +2,53 @@
 import Base from '../layouts/Base.astro';
 ---
 
-<Base>
+<Base
+  title="Subdomain directory · filipino-talent.com"
+  description="Browse the Filipino remote workers using a free yourname.filipino-talent.com subdomain, search by name or GitHub username, and sort the list."
+>
 <section>
   <h1>Subdomain directory</h1>
   <p class="lead">Sites using a filipino-talent.com subdomain.</p>
-  <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:8px">
-    <input id="search" placeholder="Search by subdomain or GitHub…" style="max-width:420px" />
-    <select id="sort" style="width:auto" aria-label="Sort subdomains">
+  <div class="toolbar">
+    <label class="sr-only" for="search">Search subdomains by name or GitHub username</label>
+    <input
+      id="search"
+      type="search"
+      placeholder="Search by subdomain or GitHub…"
+      style="max-width:420px"
+      autocomplete="off"
+    />
+    <label class="sr-only" for="sort">Sort subdomains</label>
+    <select id="sort" style="width:auto">
       <option value="az" selected>Name A–Z</option>
       <option value="za">Name Z–A</option>
       <option value="new">Newest added</option>
       <option value="old">Oldest added</option>
     </select>
   </div>
+  <p id="status" class="count" role="status" aria-live="polite"></p>
 </section>
 
-<div id="list" class="grid" style="margin-top:24px">
-  <p class="muted">Loading…</p>
-</div>
+<ul id="list" class="grid domain-list" style="margin-top:24px" aria-busy="true">
+  <li class="skeleton" aria-hidden="true"></li>
+  <li class="skeleton" aria-hidden="true"></li>
+  <li class="skeleton" aria-hidden="true"></li>
+  <li class="skeleton" aria-hidden="true"></li>
+  <li class="skeleton" aria-hidden="true"></li>
+  <li class="skeleton" aria-hidden="true"></li>
+</ul>
+
+<noscript>
+  <div class="notice mt-6">
+    This directory loads with JavaScript. You can still
+    <a href="/submit">get your own subdomain</a> or read the
+    <a href="/guide">guide</a>.
+  </div>
+</noscript>
 
 <script>
-  const list = document.getElementById('list') as HTMLDivElement;
+  const list = document.getElementById('list') as HTMLUListElement;
+  const status = document.getElementById('status') as HTMLParagraphElement;
   const search = document.getElementById('search') as HTMLInputElement;
   const sort = document.getElementById('sort') as HTMLSelectElement;
   const API = (import.meta.env.PUBLIC_API_BASE ?? 'https://api.filipino-talent.com').replace(/\/$/, '');
@@ -41,23 +67,60 @@ import Base from '../layouts/Base.astro';
       (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string,
     );
 
-  function render(items: Domain[]) {
-    if (!items.length) {
-      list.innerHTML = '<p class="muted">No subdomains yet. Be the first!</p>';
+  const skeletons = () => {
+    list.innerHTML = '<li class="skeleton" aria-hidden="true"></li>'.repeat(6);
+  };
+
+  function render(items: Domain[], total: number) {
+    const q = search.value.trim();
+
+    if (total === 0) {
+      status.textContent = '';
+      list.innerHTML = `
+        <li class="filter-empty card">
+          <p class="muted" style="margin:0">No sites are listed yet — yours could be the first.</p>
+          <a class="btn" href="/submit">Get your subdomain</a>
+          <a href="/guide">Read the guide →</a>
+        </li>`;
       return;
     }
+
+    if (items.length === 0) {
+      status.textContent = q ? `No subdomains match “${q}”.` : 'No subdomains to show.';
+      list.innerHTML = `
+        <li class="filter-empty card">
+          <p class="muted" style="margin:0">No sites match “${esc(q)}”.</p>
+          <button class="btn secondary" type="button" id="clear">Clear search</button>
+        </li>`;
+      document.getElementById('clear')?.addEventListener('click', () => {
+        search.value = '';
+        syncUrl();
+        update();
+        search.focus();
+      });
+      return;
+    }
+
+    status.textContent =
+      items.length === total
+        ? `${total} subdomain${total === 1 ? '' : 's'}.`
+        : `${items.length} of ${total} subdomains.`;
+
     list.innerHTML = items
       .map((d) => {
         const href = `https://${d.subdomain}.filipino-talent.com`;
         const added = d.created_at ? d.created_at.slice(0, 10) : '';
         return `
-        <a class="card" href="${esc(href)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
-          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">
-            <strong style="color:var(--text)">${esc(d.subdomain)}</strong>
-            ${added ? `<span class="muted mono" style="font-size:.78rem;flex:none">${esc(added)}</span>` : ''}
-          </div>
-          ${d.github_username ? `<p class="muted" style="margin:8px 0 0;font-size:.9rem">@${esc(d.github_username)}</p>` : ''}
-        </a>`;
+        <li>
+          <a class="card" href="${esc(href)}" target="_blank" rel="noopener noreferrer">
+            <span class="row-top">
+              <strong>${esc(d.subdomain)}</strong>
+              ${added ? `<span class="muted mono" style="font-size:.78rem;flex:none">${esc(added)}</span>` : ''}
+            </span>
+            ${d.github_username ? `<span class="muted" style="font-size:.9rem">@${esc(d.github_username)}</span>` : ''}
+            <span class="sr-only">(opens in a new tab)</span>
+          </a>
+        </li>`;
       })
       .join('');
   }
@@ -74,6 +137,14 @@ import Base from '../layouts/Base.astro';
     return sorted;
   }
 
+  function syncUrl() {
+    const params = new URLSearchParams();
+    if (search.value.trim()) params.set('q', search.value.trim());
+    if (sort.value !== 'az') params.set('sort', sort.value);
+    const qs = params.toString();
+    history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+  }
+
   function update() {
     const q = search.value.trim().toLowerCase();
     const filtered = domains.filter(
@@ -82,20 +153,59 @@ import Base from '../layouts/Base.astro';
         d.subdomain.toLowerCase().includes(q) ||
         (d.github_username ?? '').toLowerCase().includes(q),
     );
-    render(sortDomains(filtered));
+    render(sortDomains(filtered), domains.length);
+    syncUrl();
   }
 
-  search.addEventListener('input', update);
+  function showError() {
+    status.textContent = '';
+    list.setAttribute('aria-busy', 'false');
+    list.innerHTML = `
+      <li class="filter-empty card">
+        <p class="muted" style="margin:0">Could not load the directory right now.</p>
+        <button class="btn" type="button" id="retry">Try again</button>
+        <a href="mailto:verify@filipino-talent.com">Report a problem →</a>
+      </li>`;
+    document.getElementById('retry')?.addEventListener('click', () => void load());
+  }
+
+  async function load() {
+    list.setAttribute('aria-busy', 'true');
+    skeletons();
+    status.textContent = 'Loading subdomains…';
+    try {
+      const res = await fetch(`${API}/domains`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      domains = Array.isArray(data?.domains) ? data.domains : [];
+      list.setAttribute('aria-busy', 'false');
+      update();
+    } catch {
+      showError();
+    }
+  }
+
+  const seed = new URLSearchParams(location.search);
+  if (seed.get('q')) search.value = seed.get('q') as string;
+  if (seed.get('sort')) sort.value = seed.get('sort') as string;
+
+  let debounce: number | undefined;
+  search.addEventListener('input', () => {
+    window.clearTimeout(debounce);
+    debounce = window.setTimeout(update, 120);
+  });
   sort.addEventListener('change', update);
 
-  fetch(`${API}/domains`)
-    .then((r) => r.json())
-    .then((data) => {
-      domains = data.domains ?? [];
-      update();
-    })
-    .catch(() => {
-      list.innerHTML = '<p class="muted">Could not load the directory right now.</p>';
-    });
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== '/' || event.metaKey || event.ctrlKey) return;
+    const el = document.activeElement;
+    const typing =
+      el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement;
+    if (typing) return;
+    event.preventDefault();
+    search.focus();
+  });
+
+  void load();
 </script>
 </Base>

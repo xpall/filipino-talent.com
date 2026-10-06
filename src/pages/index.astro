@@ -2,79 +2,159 @@
 import Base from '../layouts/Base.astro';
 
 const hosts = [
-  { name: 'GitHub Pages', target: 'username.github.io', note: 'Free forever, works with a repo' },
-  { name: 'Cloudflare Pages', target: 'project.pages.dev', note: 'Free, fast, custom domains' },
-  { name: 'Vercel', target: 'project.vercel.app', note: 'Great for Next.js portfolios' },
-  { name: 'Netlify', target: 'site.netlify.app', note: 'Free tier, drag-and-drop deploy' },
+  {
+    name: 'GitHub Pages',
+    target: 'username.github.io',
+    note: 'Free forever, works with a repo',
+    href: '/guide/github-pages',
+  },
+  {
+    name: 'Cloudflare Pages',
+    target: 'project.pages.dev',
+    note: 'Free, fast, custom domains',
+    href: '/guide/cloudflare-pages',
+  },
+  {
+    name: 'Vercel',
+    target: 'project.vercel.app',
+    note: 'Great for Next.js portfolios',
+    href: '/guide/vercel',
+  },
+  {
+    name: 'Netlify',
+    target: 'site.netlify.app',
+    note: 'Free tier, drag-and-drop deploy',
+    href: '/guide/netlify',
+  },
 ];
 ---
 
 <Base>
-<section>
-  <span class="tag">Free · For Filipino remote workers</span>
-  <h1>Your own <span style="color:var(--brand)">yourname</span>.filipino-talent.com</h1>
-  <p class="lead">
-    Already have a portfolio on GitHub Pages, Cloudflare Pages, Netlify, or Vercel?
-    Put it on a clean, professional subdomain for free. We handle the DNS, you keep
-    your site.
+<section class="hero">
+  <h1>Give your portfolio a name worth sharing.</h1>
+  <p class="lead narrow">
+    You already built the site. We give it a clean
+    <strong>yourname.filipino-talent.com</strong> address and point it at the host
+    you already use. No DNS knowledge needed — we handle that part.
   </p>
-  <p style="margin-top:24px">
+  <p class="hero-demo" aria-label="Example of a finished address">
+    <span>juan-dela-cruz</span><span class="host">.filipino-talent.com</span>
+  </p>
+  <p class="row mt-6" style="gap:10px">
     <a class="btn" href="/submit">Get your subdomain</a>
-    <a class="btn secondary" href="/guide" style="margin-left:8px">Read the guide</a>
+    <a class="btn secondary" href="/guide">How it works</a>
   </p>
-  <p class="muted" style="margin-top:20px;font-size:.9rem">
-    A free service for Filipino remote workers, and it stays free as long as it can
-    run within Cloudflare's free tier. Built for aspiring remote workers: once you
-    can afford your own domain, email
-    <a href="mailto:remove@filipino-talent.com">remove@filipino-talent.com</a> to
-    remove your subdomain and free the name for the next person.
+  <ul class="trust-row">
+    <li>Takes about 2 minutes</li>
+    <li>Free, no catch</li>
+    <li>Nothing is published until you confirm it is yours</li>
+    <li>Remove it anytime</li>
+  </ul>
+  <p id="proof" class="muted" hidden style="margin-top:18px;font-size:.95rem"></p>
+</section>
+
+<hr />
+
+<section>
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li>
+      <strong>Pick a name and submit.</strong> A subdomain is just the part before
+      the dot — like <code>juan-dela-cruz</code>. Tell us the name you want, your
+      portfolio URL, and where it is hosted.
+    </li>
+    <li>
+      <strong>It goes live.</strong> Your address is published automatically,
+      usually within 15 minutes. Email <code>verify@filipino-talent.com</code>
+      from the address on your portfolio so we can confirm it is yours.
+    </li>
+    <li>
+      <strong>Connect it at your host.</strong> Tell GitHub Pages, Cloudflare
+      Pages, Vercel, or Netlify to answer for the subdomain. Our
+      <a href="/guide/connect">one-page guide</a> walks you through it.
+    </li>
+    <li>
+      <strong>Keep it, or pass it on.</strong> It is yours for as long as you
+      need it. Once you can afford your own domain, release it for the next
+      person.
+    </li>
+  </ol>
+  <p class="muted mt-5">
+    No portfolio online yet? Follow our free
+    <a href="/guide/github-pages">GitHub Pages setup</a> first, then come back.
   </p>
 </section>
 
 <hr />
 
-<h2>How it works</h2>
-<ol class="steps">
-  <li>
-    <strong>Submit the form.</strong> Tell us the name you want, your portfolio URL,
-    and where it is hosted.
-  </li>
-  <li>
-    <strong>It goes live.</strong> Your subdomain is published automatically,
-    usually within 15 minutes. Email <code>verify@filipino-talent.com</code> from
-    the address on your portfolio to confirm it is yours. If we do not hear from
-    you within a day, we remove it.
-  </li>
-  <li>
-    <strong>Connect it at your host.</strong> Tell GitHub Pages, Cloudflare
-    Pages, Vercel, or Netlify to answer for the subdomain. Our
-    <a href="/guide/connect">one-page guide</a> walks you through it.
-  </li>
-  <li>
-    <strong>We check it.</strong> A maintainer reviews new subdomains and removes
-    any that break the rules.
-  </li>
-</ol>
+<section>
+  <h2>Works with the host you already use</h2>
+  <ul class="host-list">
+    {hosts.map((h) => (
+      <li>
+        <a class="host-list-item" href={h.href}>
+          <span class="host-list-name">{h.name}</span>
+          <span class="host-list-target mono">{h.target}</span>
+          <span class="host-list-note muted">{h.note}</span>
+          <span class="host-list-go">Set it up →</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <p class="muted mt-5">
+    Using Wix, Canva, or WordPress.com? They need a paid plan and their own DNS,
+    so they are not supported here. See
+    <a href="/guide/canva">free alternatives</a>.
+  </p>
+</section>
 
-<h2>Works with the host you already use</h2>
-<div class="grid">
-  {hosts.map((h) => (
-    <div class="card">
-      <strong>{h.name}</strong>
-      <div class="muted mono" style="font-size:.85rem;margin:6px 0">{h.target}</div>
-      <div class="muted" style="font-size:.9rem">{h.note}</div>
-    </div>
-  ))}
+<div class="band pass-on">
+  <div>
+    <h2>This is a gift. Pass it on.</h2>
+    <p class="muted" style="margin-bottom:0">
+      filipino-talent.com is a free service for Filipino remote workers. Once you
+      can afford a domain of your own, email
+      <a href="mailto:remove@filipino-talent.com">remove@filipino-talent.com</a>
+      to release your name for the next person climbing the same path.
+    </p>
+  </div>
+  <p style="margin:0">
+    <a class="btn secondary" href="/directory">See who already has one</a>
+  </p>
 </div>
 
-<hr />
+<aside class="band" style="text-align:left">
+  <h2 style="font-size:1.15rem">Who this is for</h2>
+  <p class="muted" style="margin-bottom:0">
+    This service is for Filipino remote workers. Requests from outside that
+    community may be declined. filipino-talent.com is an independent community
+    project — not a job board, and not affiliated with any employer, agency, or
+    organization. A subdomain implies no endorsement or employment.
+  </p>
+</aside>
 
-<section class="card" style="text-align:center">
-  <h2 style="margin-top:0">Ready to look professional?</h2>
+<section class="card center" style="margin-top:32px">
+  <h2 class="mt-0">Ready to look professional?</h2>
   <p class="muted">It takes about two minutes. No cost, no catch.</p>
-  <a class="btn" href="/submit">Claim your subdomain</a>
   <p style="margin-top:16px">
-    <a href="/directory">See who already has one →</a>
+    <a class="btn" href="/submit">Get your subdomain</a>
   </p>
 </section>
+
+<script>
+  const API = (import.meta.env.PUBLIC_API_BASE ?? 'https://api.filipino-talent.com').replace(/\/$/, '');
+  fetch(`${API}/domains`)
+    .then((r) => (r.ok ? r.json() : null))
+    .then((data) => {
+      const n = Array.isArray(data?.domains) ? data.domains.length : 0;
+      const el = document.getElementById('proof');
+      if (!el || n <= 0) return;
+      el.textContent =
+        n === 1
+          ? '1 creator has already claimed a subdomain.'
+          : `${n} creators have already claimed a subdomain.`;
+      el.hidden = false;
+    })
+    .catch(() => {});
+</script>
 </Base>
