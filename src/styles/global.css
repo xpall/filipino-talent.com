@@ -266,6 +266,29 @@ html[data-theme='dark'] .theme-toggle .icon-moon {
   display: none;
 }
 
+.icon-link {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+}
+
+.icon-link:hover {
+  color: var(--text);
+  background: var(--bg-soft);
+  text-decoration: none;
+}
+
+.icon-link svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
 main {
   padding: 56px 0 72px;
 }
@@ -947,6 +970,10 @@ footer.site .wrap {
 @media (max-width: 600px) {
   main {
     padding: 40px 0 56px;
+  }
+
+  header.site .wrap {
+    column-gap: 8px;
   }
 
   nav {

@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import HowItWorks from '../components/HowItWorks.astro';
+import { GITHUB_URL, IS_A_DEV_URL } from '../lib/site';
 
 const hosts = [
   {
@@ -132,6 +133,18 @@ const hosts = [
     community may be declined. filipino-talent.com is an independent community
     project — not a job board, and not affiliated with any employer, agency, or
     organization. A subdomain implies no endorsement or employment.
+  </p>
+</aside>
+
+<aside class="band" style="text-align:left">
+  <h2 style="font-size:1.15rem">Open source</h2>
+  <p class="muted" style="margin-bottom:0">
+    The code for this site is on
+    <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a>.
+    Inspired by
+    <a href={IS_A_DEV_URL} target="_blank" rel="noopener noreferrer">is-a.dev</a>,
+    the free subdomain service for developers — but built for Filipino remote
+    workers, not just people who write code.
   </p>
 </aside>
 

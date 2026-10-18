@@ -6,6 +6,17 @@ form, and the public subdomain directory. Deployed to Cloudflare Pages.
 The backend (registry, DNS automation, API Worker) lives in the
 `filipino-talent-backend` repository.
 
+## Open source and credits
+
+This site's source is at
+[github.com/xpall/filipino-talent.com](https://github.com/xpall/filipino-talent.com)
+and is [MIT licensed](LICENSE).
+
+The project is inspired by [is-a.dev](https://www.is-a.dev), a free subdomain
+service for developers ([source](https://github.com/is-a-dev/register)). The
+difference: this one is for Filipino remote workers, not just developers. The
+idea is the same: a free name, DNS only, and a pass-it-on policy.
+
 ## Stack
 
 - [Astro](https://astro.build) (static output) with MDX
