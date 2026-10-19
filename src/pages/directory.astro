@@ -20,9 +20,9 @@ import Base from '../layouts/Base.astro';
     />
     <label class="sr-only" for="sort">Sort subdomains</label>
     <select id="sort" style="width:auto">
-      <option value="az" selected>Name A–Z</option>
+      <option value="az">Name A–Z</option>
       <option value="za">Name Z–A</option>
-      <option value="new">Newest added</option>
+      <option value="new" selected>Newest added</option>
       <option value="old">Oldest added</option>
     </select>
   </div>
@@ -140,7 +140,7 @@ import Base from '../layouts/Base.astro';
   function syncUrl() {
     const params = new URLSearchParams();
     if (search.value.trim()) params.set('q', search.value.trim());
-    if (sort.value !== 'az') params.set('sort', sort.value);
+    if (sort.value !== 'new') params.set('sort', sort.value);
     const qs = params.toString();
     history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
   }
