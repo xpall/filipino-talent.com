@@ -80,6 +80,8 @@ curl http://127.0.0.1:8020/health
 
 The container always listens on port `8000` internally. `APP_PORT` only changes
 the host-facing port. The SQLite database lives in `./data` on the host.
+`APP_UID`/`APP_GID` (default `1000`) control which host user owns the SQLite
+files; set them to your VPS deploy user and rebuild if needed.
 
 ### Cloudflare Tunnel
 

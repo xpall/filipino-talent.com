@@ -62,7 +62,13 @@ docker compose exec web python manage.py sync_dns
 - Port convention: container listens on `8000`; host port is `APP_PORT` (default
   `8020`). Cloudflare Tunnel is configured in the Cloudflare dashboard, not in
   Compose.
+- The image app user defaults to UID/GID `1000` (`APP_UID`/`APP_GID` build args)
+  so the `./data` bind mount matches a typical VPS user. The entrypoint chowns
+  `data/` at startup.
 - Public URLs use no trailing slash and `APPEND_SLASH = False`. Keep `{% url %}`
   names in sync with `core/urls.py` and `registry/urls.py`.
+- `core.middleware.TrailingSlashRedirectMiddleware` accepts legacy trailing-slash
+  links from the old Astro/Pages site (301 for GET, 308 for other methods).
+  It exempts `/accounts/`, `/admin/`, and `/static/`.
 - The terms copy intentionally says publishing is immediate and that Google
   verifies the account. Do not restore the old 15-minute/`verify@` wording.

@@ -57,6 +57,38 @@ class PublicPageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Continue with Google")
 
+    def test_legacy_trailing_slashes_redirect_to_canonical_paths(self):
+        for path, target in [
+            ("/submit/", "/submit"),
+            ("/submit/done/1/", "/submit/done/1"),
+            ("/directory/", "/directory"),
+            ("/guide/", "/guide"),
+            ("/guide/connect/", "/guide/connect"),
+            ("/terms/", "/terms"),
+            ("/account/", "/account"),
+            ("/dashboard/", "/dashboard"),
+            ("/health/", "/health"),
+            ("/api/domains/", "/api/domains"),
+        ]:
+            with self.subTest(path=path):
+                response = self.client.get(path)
+                self.assertEqual(response.status_code, 301)
+                self.assertEqual(response["Location"], target)
+
+    def test_trailing_slash_redirect_preserves_query(self):
+        response = self.client.get("/directory/?q=juan&sort=az")
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response["Location"], "/directory?q=juan&sort=az")
+
+    def test_accounts_urls_keep_their_trailing_slash(self):
+        response = self.client.get("/accounts/login/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_to_trailing_slash_uses_308(self):
+        response = self.client.post("/submit/")
+        self.assertEqual(response.status_code, 308)
+        self.assertEqual(response["Location"], "/submit")
+
     def test_directory_lists_live_subdomains(self):
         Submission.objects.create(
             subdomain="juan",

@@ -7,7 +7,11 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends gosu \
     && rm -rf /var/lib/apt/lists/*
 
-RUN groupadd -r app && useradd -r -g app app
+ARG APP_UID=1000
+ARG APP_GID=1000
+
+RUN groupadd -g "$APP_GID" app \
+    && useradd -u "$APP_UID" -g app -M -s /usr/sbin/nologin app
 
 WORKDIR /app
 
