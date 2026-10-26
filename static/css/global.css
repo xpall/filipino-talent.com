@@ -230,6 +230,16 @@ nav a[aria-current='page'] {
   font-weight: 600;
 }
 
+nav a.nav-templates {
+  color: var(--brand-text);
+  font-weight: 600;
+}
+
+nav a.nav-templates:hover {
+  color: var(--brand-text);
+  text-decoration: underline;
+}
+
 .theme-toggle {
   display: grid;
   place-items: center;

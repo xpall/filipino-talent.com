@@ -17,6 +17,7 @@ def site(request):
         "ZONE": settings.ZONE,
         "GITHUB_URL": "https://github.com/xpall/filipino-talent.com",
         "IS_A_DEV_URL": "https://www.is-a.dev",
+        "PORTFOLIO_URL": "https://portfolio.filipino-talent.com/",
         "is_admin": is_admin,
         "current_path": request.path,
         "google_configured": bool(
