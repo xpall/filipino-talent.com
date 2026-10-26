@@ -1,5 +1,6 @@
 Django>=5.2,<5.3
-django-allauth>=65,<70
+# The socialaccount extra installs PyJWT[crypto], required for Google ID tokens.
+django-allauth[socialaccount]>=65,<70
 gunicorn>=23,<24
 whitenoise>=6.8,<7
 requests>=2.32,<3

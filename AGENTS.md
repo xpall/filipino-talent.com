@@ -43,6 +43,9 @@ docker compose exec web python manage.py sync_dns
   Cloudflare Worker.
 - Google is the only auth method via django-allauth. `/submit` and `/account`
   require login; `/dashboard` requires an email in `ADMIN_EMAILS`.
+- Google ID-token decoding needs `PyJWT[crypto]`. Keep the
+  `django-allauth[socialaccount]` extra in `requirements.txt`; plain
+  `django-allauth` causes the callback to fail with `No module named 'jwt'`.
 - Submissions publish immediately. If the Cloudflare API fails, the row stays
   `pending`; retry from `/account`, `/dashboard`, or `manage.py sync_dns`.
 - `removed`/`rejected` rows free the name. Delete DNS first, then flip status.
