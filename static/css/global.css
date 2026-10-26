@@ -339,6 +339,10 @@ h3 {
   overflow-wrap: anywhere;
 }
 
+section + .card {
+  margin-top: var(--space-5);
+}
+
 a.card {
   transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 }
