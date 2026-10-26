@@ -110,14 +110,15 @@ rate limits, permissions, the staff dashboard, legacy import, and DNS retries.
 Before shutting down the old API, import its public directory. On the VPS:
 
 ```bash
-# fetches https://api.filipino-talent.com/domains
-docker compose exec web python manage.py import_legacy
-
-# or from a saved JSON file placed in ./data
+# Save a snapshot first, then import that file
+curl -fsS https://api.filipino-talent.com/domains -o data/legacy-domains.json
 docker compose exec web python manage.py import_legacy \
   --file /app/data/legacy-domains.json
 
-# also upsert the DNS records (optional; existing records are already live)
+# Or fetch the endpoint directly
+docker compose exec web python manage.py import_legacy
+
+# Also upsert the DNS records (optional; existing records are already live)
 docker compose exec web python manage.py import_legacy --sync-dns
 ```
 
@@ -143,8 +144,10 @@ are tied to Google accounts and can be released from `/account`.
 
 ## Moderation
 
-- `/dashboard` lists all submissions, filters by status, and supports publish,
-  retry, remove, and reject.
+- `/dashboard` lists all submissions, filters by status, and supports edit,
+  publish, retry, remove, and reject. The edit form updates the directory's
+  portfolio URL and GitHub username; it never changes the subdomain or DNS
+  record.
 - `/account` lets a signed-in user retry a pending publish or release a name.
 - To free a name, the app deletes the tagged Cloudflare records first, then marks
   the row `removed` or `rejected`.

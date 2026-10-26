@@ -14,7 +14,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from registry.forms import SubmitForm
+from registry.forms import DirectoryEntryForm, SubmitForm
 from registry.models import Submission
 from registry.permissions import admin_required, is_admin
 from registry.services.publish import PublishError, publish_submission, unpublish_submission
@@ -264,6 +264,27 @@ def dashboard(request):
             "counts": counts,
             "status_choices": Submission.Status.choices,
         },
+    )
+
+
+@admin_required
+def dashboard_edit(request, pk: int):
+    submission = get_object_or_404(Submission, pk=pk)
+    if request.method == "POST":
+        form = DirectoryEntryForm(request.POST, instance=submission)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                f"Updated the directory entry for {submission.subdomain}.{settings.ZONE}.",
+            )
+            return redirect("dashboard")
+    else:
+        form = DirectoryEntryForm(instance=submission)
+    return render(
+        request,
+        "dashboard/edit.html",
+        {"form": form, "submission": submission},
     )
 
 

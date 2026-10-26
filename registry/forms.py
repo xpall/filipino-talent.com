@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from django import forms
 
+from registry.models import Submission
 from registry.services.rules import (
     ALLOWED_CNAME,
     GH_USER_RE,
@@ -13,6 +14,41 @@ from registry.services.rules import (
     to_domain_doc,
     validate_domain,
 )
+
+
+class DirectoryEntryForm(forms.ModelForm):
+    class Meta:
+        model = Submission
+        fields = ["portfolio_url", "github_username"]
+        widgets = {
+            "portfolio_url": forms.URLInput(
+                attrs={
+                    "id": "portfolioUrl",
+                    "placeholder": "https://juan-dela-cruz.github.io",
+                    "aria-describedby": "portfolioUrl-hint",
+                }
+            ),
+            "github_username": forms.TextInput(
+                attrs={
+                    "id": "githubUsername",
+                    "placeholder": "juan-dela-cruz",
+                    "autocomplete": "username",
+                    "aria-describedby": "githubUsername-hint",
+                }
+            ),
+        }
+
+    def clean_portfolio_url(self):
+        value = self.cleaned_data["portfolio_url"].strip()
+        if not is_https_url(value):
+            raise forms.ValidationError("Enter a full https:// URL.")
+        return value
+
+    def clean_github_username(self):
+        value = (self.cleaned_data.get("github_username") or "").strip()
+        if value and not GH_USER_RE.fullmatch(value):
+            raise forms.ValidationError("Enter a valid GitHub username.")
+        return value
 
 
 class SubmitForm(forms.Form):

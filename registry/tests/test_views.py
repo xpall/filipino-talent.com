@@ -268,6 +268,47 @@ class DashboardTests(TestCase):
         self.client.force_login(self.admin)
         self.assertEqual(self.client.get("/dashboard").status_code, 200)
 
+    def test_dashboard_edit_requires_admin(self):
+        url = f"/dashboard/{self.submission.pk}/edit"
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/accounts/login/", response["Location"])
+        self.client.force_login(self.user)
+        self.assertEqual(self.client.get(url).status_code, 403)
+        self.client.force_login(self.admin)
+        self.assertEqual(self.client.get(url).status_code, 200)
+
+    def test_admin_edits_directory_metadata(self):
+        self.client.force_login(self.admin)
+        response = self.client.post(
+            f"/dashboard/{self.submission.pk}/edit",
+            {
+                "portfolio_url": "https://new.example",
+                "github_username": "new-handle",
+            },
+        )
+        self.assertRedirects(response, "/dashboard")
+        self.submission.refresh_from_db()
+        self.assertEqual(self.submission.portfolio_url, "https://new.example")
+        self.assertEqual(self.submission.github_username, "new-handle")
+        self.assertContains(self.client.get("/directory"), "@new-handle")
+
+    def test_admin_edit_rejects_invalid_metadata(self):
+        self.client.force_login(self.admin)
+        response = self.client.post(
+            f"/dashboard/{self.submission.pk}/edit",
+            {
+                "portfolio_url": "http://juan.github.io",
+                "github_username": "bad name",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Enter a full https:// URL.")
+        self.assertContains(response, "Enter a valid GitHub username.")
+        self.submission.refresh_from_db()
+        self.assertEqual(self.submission.portfolio_url, "https://juan.github.io")
+        self.assertEqual(self.submission.github_username, "")
+
     @patch("registry.services.publish.cloudflare.delete_records", return_value=1)
     def test_admin_remove(self, delete):
         self.client.force_login(self.admin)
