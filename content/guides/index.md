@@ -10,9 +10,9 @@ what DNS means. You only need a site that is already online.
 
 ## Before you start
 
-- [ ] Your portfolio is **already published**, and you can open its link in a browser (for example `https://juan-dela-cruz.github.io`).
-- [ ] You have a **Google account** to sign in with.
-- [ ] You have an idea of the **subdomain** you want, usually your name.
+- A portfolio that is **already published**, with a link you can open in a browser (for example `https://juan-dela-cruz.github.io`).
+- A **Google account** to sign in with.
+- An idea of the **subdomain** you want, usually your name.
 
 > **Which hosts work?** GitHub Pages, Cloudflare Pages, Vercel, and Netlify —
 > all free with a plain CNAME. Builders like Wix, Canva, and WordPress.com need

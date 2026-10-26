@@ -58,17 +58,12 @@ MARKDOWN_EXTENSIONS = [
     "md_in_html",
     "pymdownx.superfences",
     "pymdownx.tilde",
-    "pymdownx.tasklist",
 ]
 
 
 def _render_guide(filename: str) -> tuple[dict, str]:
     post = frontmatter.load(CONTENT_DIR / filename)
-    body = markdown.markdown(
-        post.content,
-        extensions=MARKDOWN_EXTENSIONS,
-        extension_configs={"pymdownx.tasklist": {"custom_checkbox": True}},
-    )
+    body = markdown.markdown(post.content, extensions=MARKDOWN_EXTENSIONS)
     return post.metadata, mark_safe(body)
 
 

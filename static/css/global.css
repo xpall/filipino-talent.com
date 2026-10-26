@@ -91,6 +91,10 @@ html[data-theme='dark'] {
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -484,24 +488,6 @@ input[type='radio'] {
   margin-top: 5px;
 }
 
-/* Markdown task lists */
-ul.contains-task-list {
-  list-style: none;
-  padding-left: 0;
-}
-
-li.task-list-item {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  padding: 5px 0;
-}
-
-li.task-list-item input[type='checkbox'] {
-  margin-top: 6px;
-  flex: none;
-}
-
 .honeypot {
   position: absolute;
   left: -9999px;
@@ -786,6 +772,10 @@ footer.site .wrap {
 .domain-list > li {
   display: flex;
   min-width: 0;
+}
+
+.domain-list > .filter-empty {
+  grid-column: 1 / -1;
 }
 
 .domain-list > li > a.card {
