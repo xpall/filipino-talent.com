@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Subdomain directory | Filipino Talent{% endblock %}
+{% block description %}Browse the Filipino remote workers using a free yourname.filipino-talent.com subdomain, search by name or GitHub username, and sort the list.{% endblock %}
+
+{% block content %}
+<section>
+  <h1>Subdomain directory</h1>
+  <p class="lead">Sites using a filipino-talent.com subdomain.</p>
+  <div class="toolbar">
+    <label class="sr-only" for="search">Search subdomains by name or GitHub username</label>
+    <input
+      id="search"
+      type="search"
+      placeholder="Search by subdomain or GitHub…"
+      style="max-width:420px"
+      autocomplete="off"
+    />
+    <label class="sr-only" for="sort">Sort subdomains</label>
+    <select id="sort" style="width:auto">
+      <option value="az">Name A–Z</option>
+      <option value="za">Name Z–A</option>
+      <option value="new" selected>Newest added</option>
+      <option value="old">Oldest added</option>
+    </select>
+  </div>
+  <p id="status" class="count" role="status" aria-live="polite">
+    {% if total %}{{ total }} subdomain{{ total|pluralize }}.{% endif %}
+  </p>
+</section>
+
+{% if total %}
+  <ul id="list" class="grid domain-list" style="margin-top:24px">
+    {% for domain in domains %}
+      <li
+        data-name="{{ domain.subdomain|lower }}"
+        data-github="{{ domain.github_username|default:''|lower }}"
+        data-date="{{ domain.published_at|date:'c' }}"
+      >
+        <a class="card" href="https://{{ domain.subdomain }}.{{ ZONE }}" target="_blank" rel="noopener noreferrer">
+          <span class="row-top">
+            <strong>{{ domain.subdomain }}</strong>
+            <span class="muted mono" style="font-size:.78rem;flex:none">
+              {{ domain.published_at|date:"Y-m-d" }}
+            </span>
+          </span>
+          {% if domain.github_username %}
+            <span class="muted" style="font-size:.9rem">@{{ domain.github_username }}</span>
+          {% endif %}
+          <span class="sr-only">(opens in a new tab)</span>
+        </a>
+      </li>
+    {% endfor %}
+    <li id="no-results" class="filter-empty card" hidden>
+      <p class="muted" style="margin:0">No sites match your search.</p>
+      <button class="btn secondary" type="button" id="clear">Clear search</button>
+      <a href="mailto:verify@filipino-talent.com">Report a problem →</a>
+    </li>
+  </ul>
+  <noscript>
+    <p class="muted mt-4">Search and sorting need JavaScript. The full list is shown above.</p>
+  </noscript>
+{% else %}
+  <ul class="grid domain-list" style="margin-top:24px">
+    <li class="filter-empty card">
+      <p class="muted" style="margin:0">No sites are listed yet — yours could be the first.</p>
+      <a class="btn" href="/submit">Get your subdomain</a>
+      <a href="/guide">Read the guide →</a>
+      <a href="mailto:verify@filipino-talent.com">Report a problem →</a>
+    </li>
+  </ul>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+  {% if total %}<script src="{% static 'js/directory.js' %}" defer></script>{% endif %}
+{% endblock %}

@@ -1,0 +1,34 @@
+---
+title: Cloudflare Pages guide | Filipino Talent
+description: Deploy for free with Cloudflare Pages and connect your filipino-talent.com subdomain.
+---
+
+# Cloudflare Pages
+
+Cloudflare Pages has a generous free tier and is fast in the Philippines.
+
+## 1. Get your site online
+
+1. Create a free Cloudflare account.
+2. In the dashboard go to **Workers & Pages → Create → Pages**.
+3. Connect a Git repository (GitHub/GitLab) or upload files directly.
+4. Deploy. You get a URL like `https://your-project.pages.dev`.
+
+## 2. Submit your request
+
+On the [submit form](/submit):
+
+- **Record type:** `CNAME`
+- **Target:** `your-project.pages.dev`
+
+## 3. Connect it at Cloudflare Pages
+
+Once your subdomain is live, tell Cloudflare Pages to answer for it. That is the
+step that actually makes the site load — follow the
+[Cloudflare Pages steps](/guide/connect#cloudflare-pages).
+
+## Notes
+
+- The target is the project's `pages.dev` address, not a deployment hash URL.
+- Opening the subdomain before connecting it shows **522 Connection timed out**.
+  That is expected until you finish step 3.

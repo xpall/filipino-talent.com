@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Sign-in cancelled | Filipino Talent{% endblock %}
+
+{% block content %}
+<section>
+  <h1>Sign-in cancelled</h1>
+  <p class="lead">No changes were made. You can try again whenever you are ready.</p>
+  <p><a class="btn" href="{% url 'account_login' %}">Continue with Google</a></p>
+</section>
+{% endblock %}

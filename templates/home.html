@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Filipino Talent · Professional web addresses for Filipino remote workers{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>Give your portfolio a name worth sharing.</h1>
+  <p class="lead narrow">
+    You already built the site. We give it a clean
+    <strong>yourname.filipino-talent.com</strong> address and point it at the host
+    you already use. No DNS knowledge needed — we handle that part.
+  </p>
+  <p class="hero-demo" aria-label="Example of a finished address">
+    <span>juan-dela-cruz</span><span class="host">.filipino-talent.com</span>
+  </p>
+  <p class="row mt-6" style="gap:10px">
+    <a class="btn" href="/submit">Get your subdomain</a>
+    <a class="btn secondary" href="/guide">How it works</a>
+  </p>
+  <ul class="trust-row">
+    <li>Takes about 2 minutes</li>
+    <li>Free, no catch</li>
+    <li>Sign in with Google to claim yours</li>
+    <li>Remove it anytime</li>
+  </ul>
+  {% if domain_count %}
+    <p id="proof" class="muted" style="margin-top:18px;font-size:.95rem">
+      {{ domain_count }} creator{{ domain_count|pluralize }} ha{{ domain_count|pluralize:"s,ve" }} already claimed a subdomain.
+    </p>
+  {% endif %}
+</section>
+
+<hr />
+
+<section>
+  <h2>How it works</h2>
+  {% include "components/how_it_works.html" %}
+  <ol class="steps">
+    <li>
+      <strong>Pick a name and sign in.</strong> A subdomain is just the part before
+      the dot — like <code>juan-dela-cruz</code>. Sign in with Google, choose the
+      name you want, and tell us your portfolio URL and where it is hosted.
+    </li>
+    <li>
+      <strong>It goes live.</strong> Your address is published immediately. Google
+      confirms it is really you, so there is no confirmation email to send. A
+      maintainer reviews published subdomains afterward.
+    </li>
+    <li>
+      <strong>Connect it at your host.</strong> Tell GitHub Pages, Cloudflare
+      Pages, Vercel, or Netlify to answer for the subdomain. Our
+      <a href="/guide/connect">one-page guide</a> walks you through it.
+    </li>
+    <li>
+      <strong>Keep it, or pass it on.</strong> It is yours for as long as you
+      need it. Once you can afford your own domain, release it from your account
+      for the next person.
+    </li>
+  </ol>
+  <p class="muted mt-5">
+    No portfolio online yet? Follow our free
+    <a href="/guide/github-pages">GitHub Pages setup</a> first, then come back.
+  </p>
+</section>
+
+<hr />
+
+<section>
+  <h2>Works with the host you already use</h2>
+  <ul class="host-list">
+    {% for host in hosts %}
+      <li>
+        <a class="host-list-item" href="{{ host.href }}">
+          <span class="host-list-name">{{ host.name }}</span>
+          <span class="host-list-target mono">{{ host.target }}</span>
+          <span class="host-list-note muted">{{ host.note }}</span>
+          <span class="host-list-go">Set it up →</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+  <p class="muted mt-5">
+    Using Wix, Canva, or WordPress.com? They need a paid plan and their own DNS,
+    so they are not supported here. See
+    <a href="/guide/canva">free alternatives</a>.
+  </p>
+</section>
+
+<div class="band pass-on">
+  <div>
+    <h2>This is a gift. Pass it on.</h2>
+    <p class="muted" style="margin-bottom:0">
+      filipino-talent.com is a free service for Filipino remote workers. Once you
+      can afford a domain of your own, release your name from your account or email
+      <a href="mailto:remove@filipino-talent.com">remove@filipino-talent.com</a>
+      to free it for the next person climbing the same path.
+    </p>
+  </div>
+  <p style="margin:0">
+    <a class="btn secondary" href="/directory">See who already has one</a>
+  </p>
+</div>
+
+<aside class="band" style="text-align:left">
+  <h2 style="font-size:1.15rem">Who this is for</h2>
+  <p class="muted" style="margin-bottom:0">
+    This service is for Filipino remote workers. Requests from outside that
+    community may be declined. filipino-talent.com is an independent community
+    project — not a job board, and not affiliated with any employer, agency, or
+    organization. A subdomain implies no endorsement or employment.
+  </p>
+</aside>
+
+<aside class="band" style="text-align:left">
+  <h2 style="font-size:1.15rem">Open source</h2>
+  <p class="muted" style="margin-bottom:0">
+    The code for this site is on
+    <a href="{{ GITHUB_URL }}" target="_blank" rel="noopener noreferrer">GitHub</a>.
+    Inspired by
+    <a href="{{ IS_A_DEV_URL }}" target="_blank" rel="noopener noreferrer">is-a.dev</a>,
+    the free subdomain service for developers — but built for Filipino remote
+    workers, not just people who write code.
+  </p>
+</aside>
+
+<section class="card center" style="margin-top:32px">
+  <h2 class="mt-0">Ready to look professional?</h2>
+  <p class="muted">It takes about two minutes. No cost, no catch.</p>
+  <p style="margin-top:16px">
+    <a class="btn" href="/submit">Get your subdomain</a>
+  </p>
+</section>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/how-it-works.js' %}" defer></script>
+{% endblock %}

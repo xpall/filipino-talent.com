@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Your subdomains | Filipino Talent{% endblock %}
+
+{% block content %}
+<section>
+  <h1>Your subdomains</h1>
+  <p class="lead">Signed in as <strong>{{ user.email }}</strong>.</p>
+  <div class="row">
+    <a class="btn" href="/submit">Submit another</a>
+    <form method="post" action="{% url 'account_logout' %}">
+      {% csrf_token %}
+      <button class="btn secondary" type="submit">Sign out</button>
+    </form>
+  </div>
+</section>
+
+{% if submissions %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Subdomain</th>
+          <th scope="col">Status</th>
+          <th scope="col">Target</th>
+          <th scope="col">Added</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for submission in submissions %}
+          <tr>
+            <td>
+              {% if submission.is_live %}
+                <a href="{{ submission.url }}" target="_blank" rel="noopener noreferrer">{{ submission.subdomain }}</a>
+              {% else %}
+                <code>{{ submission.subdomain }}</code>
+              {% endif %}
+            </td>
+            <td><span class="pill {{ submission.status }}">{{ submission.get_status_display }}</span></td>
+            <td><code style="font-size:.82rem">{{ submission.record_value }}</code></td>
+            <td class="muted mono" style="font-size:.82rem">{{ submission.created_at|date:"Y-m-d" }}</td>
+            <td>
+              <div class="row" style="gap:8px">
+                {% if submission.is_pending %}
+                  <form method="post" action="{% url 'retry_publish' submission.pk %}">
+                    {% csrf_token %}
+                    <button class="btn secondary" type="submit" style="padding:4px 10px;font-size:.82rem">Retry publish</button>
+                  </form>
+                {% endif %}
+                {% if submission.is_live or submission.is_pending %}
+                  <form method="post" action="{% url 'release_submission' submission.pk %}" onsubmit="return confirm('Release {{ submission.subdomain }}.{{ ZONE }}? The name can be claimed by someone else.')">
+                    {% csrf_token %}
+                    <button class="btn secondary" type="submit" style="padding:4px 10px;font-size:.82rem">Release</button>
+                  </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="card filter-empty">
+    <p class="muted" style="margin:0">You have not requested a subdomain yet.</p>
+    <a class="btn" href="/submit">Get your subdomain</a>
+    <a href="/guide">Read the guide →</a>
+  </div>
+{% endif %}
+{% endblock %}

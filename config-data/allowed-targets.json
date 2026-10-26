@@ -1,0 +1,27 @@
+{
+  "description": "Allowed CNAME target suffixes. A subdomain's CNAME value must end with one of these; anything else is rejected and needs manual review. Only hosts where a free-tier site can be reached through an external CNAME are listed.",
+  "cname": [
+    "github.io",
+    "pages.dev",
+    "netlify.app",
+    "vercel.app",
+    "web.app",
+    "firebaseapp.com",
+    "glitch.me",
+    "onrender.com",
+    "fly.dev",
+    "railway.app",
+    "up.railway.app",
+    "surge.sh",
+    "carrd.co",
+    "framer.app",
+    "framer.website",
+    "readthedocs.io",
+    "gitlab.io",
+    "hashnode.dev",
+    "duckdns.org",
+    "azurewebsites.net",
+    "ondigitalocean.app"
+  ],
+  "note": "Hosts like Canva, Webflow, Notion, Wix, Squarespace, WordPress.com and Medium are intentionally excluded: their custom-domain features are paid or do not work with a plain external CNAME, so pointing here would produce a broken site."
+}

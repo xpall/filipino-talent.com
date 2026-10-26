@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}{% if submission.is_live %}You're live{% else %}Request received{% endif %} | Filipino Talent{% endblock %}
+
+{% block content %}
+<section>
+  {% if submission.is_live %}
+    <h1>You're live.</h1>
+    <p class="lead">
+      <strong>{{ submission.subdomain }}.{{ ZONE }}</strong> is published. Next,
+      tell your host to answer for it.
+    </p>
+  {% else %}
+    <h1>Request received.</h1>
+    <p class="lead">
+      We saved <strong>{{ submission.subdomain }}.{{ ZONE }}</strong>, but the DNS
+      record has not been published yet. Retry below, or come back to your account
+      later.
+    </p>
+  {% endif %}
+</section>
+
+<div class="card" style="max-width:720px">
+  <p class="mono" style="font-size:1.15rem;margin-top:0">
+    {% if submission.is_live %}
+      <a href="{{ submission.url }}" target="_blank" rel="noopener noreferrer">{{ submission.subdomain }}.{{ ZONE }}</a>
+    {% else %}
+      {{ submission.subdomain }}.{{ ZONE }}
+    {% endif %}
+  </p>
+  <p class="muted">
+    Target: <code>{{ submission.record_value }}</code> ({{ submission.record_type }})
+  </p>
+
+  {% if submission.is_live %}
+    <div class="notice ok">
+      <strong>Next step:</strong> connect the subdomain at your host so the address loads.
+      {% if connect %}
+        <a href="/guide/connect#{{ connect.anchor }}">Open the {{ connect.label }} steps →</a>
+      {% else %}
+        <a href="/guide/connect">See how →</a>
+      {% endif %}
+    </div>
+    <p class="muted">
+      DNS is live immediately. Your host may take a few minutes to issue HTTPS.
+      A maintainer also reviews published subdomains afterward.
+    </p>
+  {% else %}
+    <div class="notice warn">
+      <strong>Publishing failed.</strong> This is usually temporary. Retry now, or
+      try again from your account in a few minutes.
+    </div>
+    <form method="post" action="{% url 'retry_publish' submission.pk %}">
+      {% csrf_token %}
+      <button class="btn" type="submit">Retry publishing</button>
+    </form>
+  {% endif %}
+
+  <p class="row mt-6" style="gap:10px">
+    <a class="btn secondary" href="/account">Go to account</a>
+    <a class="btn secondary" href="/submit">Submit another</a>
+  </p>
+</div>
+{% endblock %}

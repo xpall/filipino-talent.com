@@ -1,0 +1,41 @@
+---
+title: GitHub Pages guide | Filipino Talent
+description: Publish a free portfolio with GitHub Pages and point your filipino-talent.com subdomain at it.
+---
+
+# GitHub Pages
+
+GitHub Pages is free, reliable, and the most common choice here.
+
+## 1. Get your site online
+
+1. Create a GitHub account if you do not have one.
+2. Create a repository. Name it `yourusername.github.io` for a personal site, or
+   anything else for a project site.
+3. Add an `index.html` file with your portfolio content.
+4. In the repository, go to **Settings → Pages**, set the source to your `main`
+   branch, and save.
+5. Wait a minute, then open `https://yourusername.github.io` (or
+   `https://yourusername.github.io/reponame` for a project site) to confirm it
+   loads.
+
+## 2. Submit your request
+
+On the [submit form](/submit):
+
+- **Record type:** `CNAME`
+- **Target:** `yourusername.github.io`
+
+## 3. Connect it at GitHub Pages
+
+Once your subdomain is live, tell GitHub Pages to answer for it. That is the
+step that actually makes the site load — follow the
+[GitHub Pages steps](/guide/connect#github-pages).
+
+## Notes
+
+- For a **project** site the target is still `yourusername.github.io`; GitHub
+  routes the subdomain to the right repository.
+- Do not add a `CNAME` file before we publish the DNS record; it can disable
+  your default `github.io` URL.
+- HTTPS may take up to an hour the first time.

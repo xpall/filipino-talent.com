@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Sign-in error | Filipino Talent{% endblock %}
+
+{% block content %}
+<section>
+  <h1>Could not sign you in</h1>
+  <p class="lead">Something went wrong while talking to Google. Please try again.</p>
+  <p><a class="btn" href="{% url 'account_login' %}">Continue with Google</a></p>
+</section>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Get your subdomain | Filipino Talent{% endblock %}
+{% block description %}Claim a free yourname.filipino-talent.com subdomain and point it at your portfolio on GitHub Pages, Cloudflare Pages, Netlify, or Vercel.{% endblock %}
+
+{% block content %}
+<section>
+  <h1>Get your subdomain</h1>
+  <p class="lead">
+    Sign in with Google, fill this out, and it goes live immediately.
+    We fill in the technical parts for you. See the <a href="/guide">guide</a> if
+    you are unsure what to enter.
+  </p>
+  <div class="muted row" style="gap:10px">
+    <span>Signed in as <strong>{{ user.email }}</strong>.</span>
+    <form method="post" action="{% url 'account_logout' %}">
+      {% csrf_token %}
+      <button class="btn secondary" type="submit" style="padding:4px 10px;font-size:.82rem">Sign out</button>
+    </form>
+  </div>
+</section>
+
+<div id="form-wrap" class="card" style="max-width:640px">
+  {% if form.non_field_errors %}
+    <div class="notice error" role="alert">
+      <strong>Could not submit.</strong>
+      <ul style="margin:8px 0 0 18px;padding:0">
+        {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <form id="request-form" method="post" action="{% url 'submit' %}">
+    {% csrf_token %}
+
+    <label for="subdomain">Choose your subdomain</label>
+    <div class="subdomain-row">
+      {{ form.subdomain }}
+      <span class="muted mono">.{{ ZONE }}</span>
+    </div>
+    <p class="hint" id="subdomain-hint">Lowercase letters, numbers and hyphens. Prefer your name.</p>
+    {% if form.subdomain.errors %}<p class="field-error">{{ form.subdomain.errors.0 }}</p>{% endif %}
+
+    <label for="legalName">Your full name</label>
+    {{ form.legal_name }}
+    <p class="hint" id="legalName-hint">Private — used only to review your request. Never published.</p>
+    {% if form.legal_name.errors %}<p class="field-error">{{ form.legal_name.errors.0 }}</p>{% endif %}
+
+    <label>Email</label>
+    <input value="{{ user.email }}" disabled aria-describedby="email-hint" />
+    <p class="hint" id="email-hint">From your Google account. Private, and never published.</p>
+
+    <label for="portfolioUrl">Your portfolio URL</label>
+    {{ form.portfolio_url }}
+    <p class="hint" id="portfolioUrl-hint">Must start with https:// and be your own site.</p>
+    {% if form.portfolio_url.errors %}<p class="field-error">{{ form.portfolio_url.errors.0 }}</p>{% endif %}
+
+    <label for="githubUsername">GitHub username (optional)</label>
+    {{ form.github_username }}
+    <p class="hint">Optional. Shown on the directory when provided.</p>
+    {% if form.github_username.errors %}<p class="field-error">{{ form.github_username.errors.0 }}</p>{% endif %}
+
+    <label for="recordValue">DNS target</label>
+    {{ form.record_value }}
+    <datalist id="targets">
+      <option value="username.github.io"></option>
+      <option value="project.pages.dev"></option>
+      <option value="project.vercel.app"></option>
+      <option value="site.netlify.app"></option>
+    </datalist>
+    <p class="hint" id="target-hint">
+      We fill this in from your portfolio URL. Only change it if your host gave
+      you a specific target. Enter the hostname only, with no <code>https://</code>
+      and no path.
+    </p>
+    <p class="hint" id="target-warning" hidden></p>
+    {% if form.record_value.errors %}<p class="field-error">{{ form.record_value.errors.0 }}</p>{% endif %}
+
+    <details id="advanced-target" class="advanced" {% if form.record_type.value != 'CNAME' %}open{% endif %}>
+      <summary>Advanced: record type</summary>
+      <div style="margin-top:10px">
+        <label for="recordType">Record type</label>
+        {{ form.record_type }}
+        <p class="hint">
+          CNAME is right for almost everyone — it points to the host you already
+          use. Only change this if your host told you otherwise.
+        </p>
+        {% if form.record_type.errors %}<p class="field-error">{{ form.record_type.errors.0 }}</p>{% endif %}
+      </div>
+    </details>
+
+    <label class="checkline">
+      {{ form.agree_to_terms }}
+      <span>I agree to the <a href="/terms" target="_blank" rel="noopener">Terms of Use</a> and confirm this site is mine.</span>
+    </label>
+    <p class="hint" id="terms-hint">Filipino remote workers only. This is an independent community project — not a job board, and not affiliated with any employer.</p>
+    {% if form.agree_to_terms.errors %}<p class="field-error">{{ form.agree_to_terms.errors.0 }}</p>{% endif %}
+
+    <div class="honeypot" aria-hidden="true">
+      <label for="website">Website</label>
+      {{ form.website }}
+    </div>
+
+    <p style="margin-top:22px">
+      <button class="btn" type="submit" id="submit-btn">Submit request</button>
+    </p>
+    <p class="hint" style="margin-top:18px">
+      This is for aspiring remote workers. When you can afford your own domain,
+      release your subdomain from your <a href="/account">account</a> or email
+      <a href="mailto:remove@filipino-talent.com">remove@filipino-talent.com</a>
+      to free the name for others.
+    </p>
+  </form>
+</div>
+
+{{ allowed_cname|json_script:"allowed-cnames" }}
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/submit.js' %}" defer></script>
+{% endblock %}

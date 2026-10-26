@@ -1,0 +1,33 @@
+---
+title: Vercel guide | Filipino Talent
+description: Deploy for free with Vercel and connect your filipino-talent.com subdomain.
+---
+
+# Vercel
+
+## 1. Get your site online
+
+1. Create a free Vercel account.
+2. Import a project from GitHub (or deploy with the CLI).
+3. Vercel gives you a production URL like `https://your-project.vercel.app`.
+
+## 2. Submit your request
+
+On the [submit form](/submit):
+
+- **Record type:** `CNAME`
+- **Target:** `your-project.vercel.app`
+
+## 3. Connect it at Vercel
+
+Once your subdomain is live, tell Vercel to answer for it. That is the step that
+actually makes the site load — follow the
+[Vercel steps](/guide/connect#vercel).
+
+## Notes
+
+- On the free plan a custom domain attached to a project works through a plain
+  CNAME.
+- Use the `vercel.app` production domain as the target.
+- Vercel may ask for a different, project-specific CNAME target. If so, email
+  `verify@filipino-talent.com` and we will update your record.

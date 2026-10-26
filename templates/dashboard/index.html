@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Moderation | Filipino Talent{% endblock %}
+
+{% block content %}
+<section>
+  <h1>Moderation</h1>
+  <p class="lead">Review, publish, remove, and reject subdomain requests.</p>
+</section>
+
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:20px">
+  <div class="card"><strong>{{ counts.live }}</strong><div class="muted">Live</div></div>
+  <div class="card"><strong>{{ counts.pending }}</strong><div class="muted">Pending</div></div>
+  <div class="card"><strong>{{ counts.removed }}</strong><div class="muted">Removed</div></div>
+  <div class="card"><strong>{{ counts.rejected }}</strong><div class="muted">Rejected</div></div>
+</div>
+
+<form method="get" action="{% url 'dashboard' %}" class="toolbar" style="margin-bottom:20px">
+  <label class="sr-only" for="q">Search</label>
+  <input id="q" name="q" type="search" value="{{ query }}" placeholder="Search subdomain, email, name…" />
+  <label class="sr-only" for="status">Status</label>
+  <select id="status" name="status">
+    <option value="">All statuses</option>
+    {% for value, label in status_choices %}
+      <option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <button class="btn" type="submit">Filter</button>
+  <a class="btn secondary" href="{% url 'dashboard' %}">Reset</a>
+</form>
+
+<p class="count">{{ page.paginator.count }} request{{ page.paginator.count|pluralize }}.</p>
+
+{% if page.object_list %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Subdomain</th>
+          <th scope="col">Status</th>
+          <th scope="col">Owner</th>
+          <th scope="col">Site</th>
+          <th scope="col">Record</th>
+          <th scope="col">Added</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for submission in page %}
+          <tr>
+            <td><strong>{{ submission.subdomain }}</strong></td>
+            <td>
+              <span class="pill {{ submission.status }}">{{ submission.get_status_display }}</span>
+              {% if submission.last_error %}<div class="muted" style="font-size:.75rem;max-width:220px">{{ submission.last_error|truncatechars:120 }}</div>{% endif %}
+            </td>
+            <td>
+              <div>{{ submission.email|default:"Legacy import" }}</div>
+              {% if submission.legal_name %}<div class="muted" style="font-size:.8rem">{{ submission.legal_name }}</div>{% endif %}
+              {% if submission.ip %}<div class="muted mono" style="font-size:.72rem">{{ submission.ip }}</div>{% endif %}
+            </td>
+            <td>
+              <a href="{{ submission.portfolio_url }}" target="_blank" rel="noopener noreferrer" style="font-size:.82rem">Portfolio</a>
+              {% if submission.github_username %}<div class="muted" style="font-size:.8rem">@{{ submission.github_username }}</div>{% endif %}
+            </td>
+            <td><code style="font-size:.75rem">{{ submission.record_type }} {{ submission.record_value }}</code></td>
+            <td class="muted mono" style="font-size:.78rem">{{ submission.created_at|date:"Y-m-d H:i" }}</td>
+            <td>
+              <div class="row" style="gap:6px">
+                {% if submission.is_pending or submission.is_live %}
+                  <form method="post" action="{% url 'dashboard_publish' submission.pk %}">
+                    {% csrf_token %}
+                    <button class="btn secondary" type="submit" style="padding:4px 8px;font-size:.75rem">{% if submission.is_live %}Republish{% else %}Publish{% endif %}</button>
+                  </form>
+                  <form method="post" action="{% url 'dashboard_remove' submission.pk %}" onsubmit="return confirm('Remove {{ submission.subdomain }}.{{ ZONE }}?')">
+                    {% csrf_token %}
+                    <button class="btn secondary" type="submit" style="padding:4px 8px;font-size:.75rem">Remove</button>
+                  </form>
+                  <form method="post" action="{% url 'dashboard_reject' submission.pk %}" onsubmit="return confirm('Reject {{ submission.subdomain }}.{{ ZONE }}?')">
+                    {% csrf_token %}
+                    <button class="btn secondary" type="submit" style="padding:4px 8px;font-size:.75rem">Reject</button>
+                  </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page.has_other_pages %}
+    <p class="row mt-5">
+      {% if page.has_previous %}
+        <a class="btn secondary" href="?page={{ page.previous_page_number }}{% if status %}&amp;status={{ status }}{% endif %}{% if query %}&amp;q={{ query|urlencode }}{% endif %}">Previous</a>
+      {% endif %}
+      <span class="muted">Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+      {% if page.has_next %}
+        <a class="btn secondary" href="?page={{ page.next_page_number }}{% if status %}&amp;status={{ status }}{% endif %}{% if query %}&amp;q={{ query|urlencode }}{% endif %}">Next</a>
+      {% endif %}
+    </p>
+  {% endif %}
+{% else %}
+  <div class="card filter-empty">
+    <p class="muted" style="margin:0">No requests match this filter.</p>
+    <a class="btn secondary" href="{% url 'dashboard' %}">Show all</a>
+  </div>
+{% endif %}
+{% endblock %}
